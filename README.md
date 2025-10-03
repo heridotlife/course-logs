@@ -1,25 +1,33 @@
 # University Course Study Planner
 
-A modern, responsive web application for planning university course schedules across 8 semesters with support for "antara" (inter-semester) periods.
+A modern, responsive web application for planning university course schedules with flexible semester configuration (4-12 semesters) and support for "antara" (inter-semester) periods.
 
 ## Features
 
 ### 📚 Course Management
 - **CRUD Operations**: Add, edit, and delete courses
 - **Course Details**: Track course code, name, type (Wajib/Pilihan), credits, lecturer, and recommended semester
-- **15 Default Courses**: Pre-loaded sample data
+- **68 Default Courses**: Pre-loaded sample data for Sibermu university
+- **Auto-Map Courses**: Automatically assign all unassigned courses to their recommended semesters
 
 ### 📅 Semester Planning
-- **11 Semesters**: 8 regular semesters + 3 antara periods (between semesters 2-3, 4-5, 6-7)
-- **Drag & Assign**: Assign courses to any semester via dropdown selection
+- **Dynamic Semesters**: Configure between 4-12 regular semesters with automatic antara period insertion
+- **Flexible Configuration**: Add or remove semesters on the fly with +/- buttons
+- **Smart Antara Insertion**: Automatically places antara periods between even-numbered semesters
+- **Dropdown Assignment**: Assign courses to any semester via dropdown selection
 - **Visual Organization**: Color-coded semester cards with clear layout
+- **Sticky Panel**: Available courses panel stays visible while scrolling
 
 ### ⚠️ Credit Validation
 - **Smart Limits**:
-  - Semester 1: 20 SKS (configurable)
-  - Regular Semesters: 24 SKS
-  - Antara Semesters: 9 SKS
-- **Visual Warnings**: Red/yellow/green color coding based on credit usage
+  - Semesters 1-2: 20 SKS (configurable)
+  - Regular Semesters 3+: 24 SKS (configurable)
+  - Antara Semesters: 9 SKS (configurable)
+- **Visual Status Indicators**: 
+  - 🔴 Red "OVER LIMIT": Exceeds maximum credits
+  - 🟢 Green "PERFECT": Exactly matches maximum credits
+  - 🔵 Blue "CAN ADD MORE": Below maximum credits
+- **Per-Semester Configuration**: Customize credit limits for each individual semester
 - **Confirmation Dialogs**: Warns when exceeding limits
 - **Real-time Calculation**: Instant credit totals per semester
 
@@ -37,11 +45,12 @@ A modern, responsive web application for planning university course schedules ac
 - **Reset Function**: Clear all data and restore defaults
 
 ### 📤 Import/Export
-- **Export to JSON**: Full data backup with settings
-- **Export to CSV**: Spreadsheet-compatible format
-- **Export to PDF**: Professional printable report with jsPDF
-- **Import from CSV**: Upload custom course data
-- **Date-stamped Files**: Automatic filename with current date
+- **Export to JSON**: Full data backup with all settings and course assignments
+- **Export to CSV**: Spreadsheet-compatible format for course data
+- **Print to PDF**: Professional 2-column landscape layout using browser's native print functionality
+- **Import from JSON**: Restore complete backup including settings and courses
+- **Import from CSV**: Upload custom course data with validation
+- **Date-stamped Files**: Automatic filename with current date for exports
 
 ### 🌓 Dark Mode
 - **Toggle Button**: Switch between light and dark themes
@@ -49,12 +58,19 @@ A modern, responsive web application for planning university course schedules ac
 - **Smooth Transitions**: Animated theme changes
 - **Full Coverage**: All components support both themes
 
+### 🌍 Multi-language Support
+- **Three Languages**: English, Indonesian (Bahasa Indonesia), and Japanese (日本語)
+- **Easy Switching**: Language selector in the header
+- **Complete Translation**: All UI elements fully translated
+- **Persistent**: Language preference saved across sessions
+
 ## Technology Stack
 
 - **Alpine.js 3.x**: Reactive JavaScript framework
 - **Tailwind CSS**: Utility-first CSS framework with dark mode support
-- **jsPDF**: PDF generation library for client-side exports
 - **localStorage**: Client-side data persistence
+- **FileReader API**: Client-side file imports (CSV/JSON)
+- **Print API**: Native browser print functionality for PDF generation
 - **Vanilla JavaScript**: No build tools required
 
 ## Getting Started
@@ -86,9 +102,13 @@ npx http-server -p 8000
 
 ```
 course-logs/
-├── index.html           # Main application file
+├── index.html           # Main application file (single-page app)
 ├── data/
-│   └── courses.json    # Default course data
+│   └── courses.json    # Default course data and settings
+├── locales/
+│   ├── en.json         # English translations
+│   ├── id.json         # Indonesian translations
+│   └── ja.json         # Japanese translations
 ├── README.md           # This file
 ├── DEPLOY.md           # Cloudflare Pages deployment guide
 └── LICENSE             # MIT License
@@ -105,6 +125,18 @@ For deploying to production (Cloudflare Pages), see the [Deployment Guide](DEPLO
 2. Fill in the course details
 3. Click "Save"
 
+### Auto-Mapping Courses
+1. Click the "Auto-Map Courses" button (🎯) in the Available Courses panel
+2. All unassigned courses with recommended semesters will be automatically assigned
+3. Courses without recommendations remain unassigned
+
+### Configuring Semesters
+1. Click "⚙️ Settings" button in the header
+2. Use the + and - buttons to add or remove semesters (4-12 range)
+3. Antara periods are automatically inserted between even-numbered semesters
+4. Customize credit limits for each individual semester
+5. Click "Save Settings"
+
 ### Assigning Courses to Semesters
 1. Find an unassigned course in the left panel
 2. Select a semester from the dropdown
@@ -117,25 +149,36 @@ For deploying to production (Cloudflare Pages), see the [Deployment Guide](DEPLO
 ### Viewing Credit Summary
 1. Click "Show Summary" button
 2. See color-coded credit status for all semesters
-3. Green: Safe, Yellow: Near limit, Red: Over limit
+3. Status indicators:
+   - 🔴 Red "OVER LIMIT": Exceeds maximum credits
+   - 🟢 Green "PERFECT": Exactly matches maximum credits
+   - 🔵 Blue "CAN ADD MORE": Below maximum credits
 
 ### Exporting Your Plan
 1. Click "Import/Export" button
-2. Choose "Export as JSON", "Export as CSV", or "Export as PDF"
-3. File downloads automatically
-   - JSON: Full backup with settings
-   - CSV: Spreadsheet format
-   - PDF: Professional printable report
+2. Choose your export format:
+   - **Export as JSON**: Full backup with all settings and assignments
+   - **Export as CSV**: Course data in spreadsheet format
+   - **Print as PDF**: Opens browser print dialog for 2-column landscape layout
+3. File downloads automatically (JSON/CSV) or opens print dialog (PDF)
 
 ### Importing Data
 1. Click "Import/Export" button
-2. Click "Import CSV File"
-3. Select your CSV file
+2. Choose import type:
+   - **Import JSON File**: Restores complete backup including settings
+   - **Import CSV File**: Imports course data only
+3. Select your file
 4. Confirm import
 
 ### Switching Themes
 1. Click the theme toggle button (🌙/☀️) in the header
 2. Theme preference is saved automatically
+
+### Changing Language
+1. Click the language selector in the header
+2. Choose from English (EN), Indonesian (ID), or Japanese (JA)
+3. All UI elements update instantly
+4. Language preference is saved automatically
 
 ## Data Format
 
@@ -143,9 +186,20 @@ For deploying to production (Cloudflare Pages), see the [Deployment Guide](DEPLO
 ```json
 {
   "settings": {
-    "semester1MaxCredits": 20,
-    "normalSemesterMaxCredits": 24,
-    "antaraSemesterMaxCredits": 9,
+    "totalSemesters": 8,
+    "semesterMaxCredits": {
+      "1": 20,
+      "2": 20,
+      "3": 24,
+      "4": 24,
+      "5": 24,
+      "6": 24,
+      "7": 24,
+      "8": 24,
+      "antara-1": 9,
+      "antara-2": 9,
+      "antara-3": 9
+    },
     "targetCredits": 145
   },
   "courses": [
@@ -172,14 +226,29 @@ ID,Code,Name,Type,Credits,Lecturer,Recommended Semester,Assigned Semester
 
 ## Customization
 
+### Modifying Semester Count
+1. Open Settings modal
+2. Use +/- buttons to adjust between 4-12 semesters
+3. Antara periods automatically adjust
+
 ### Modifying Credit Limits
-Edit `data/courses.json`:
+In Settings modal, you can customize:
+- Individual semester credit limits
+- Target total credits (SKS)
+- Separate limits for regular and antara semesters
+
+Or edit `data/courses.json` directly:
 ```json
 "settings": {
-  "semester1MaxCredits": 18,
-  "normalSemesterMaxCredits": 22,
-  "antaraSemesterMaxCredits": 6,
-  "targetCredits": 144
+  "totalSemesters": 8,
+  "semesterMaxCredits": {
+    "1": 20,
+    "2": 20,
+    "3": 24,
+    "4": 24,
+    "antara-1": 9
+  },
+  "targetCredits": 145
 }
 ```
 
@@ -201,10 +270,13 @@ Edit `data/courses.json` and add to the `courses` array.
 
 ## Future Enhancements
 
-- Prerequisite tracking
-- GPA calculation
-- Semester schedule visualization
-- Multi-user support with backend
+- [ ] Prerequisite tracking
+- [ ] GPA calculation
+- [ ] Semester schedule visualization with time slots
+- [ ] Multi-user support with backend
+- [ ] Course search and filtering
+- [ ] Export to iCal format
+- [ ] Conflict detection for course schedules
 
 ## Contributing
 
@@ -227,7 +299,18 @@ For issues or questions:
 
 ## Changelog
 
-### Version 1.1.0 (Current)
+### Version 2.0.0 (Current)
+- **Dynamic Semester Configuration**: Flexible 4-12 semester range with +/- buttons
+- **Auto-Map Feature**: Automatically assign courses to recommended semesters
+- **Enhanced Status Indicators**: Perfect (exact match), Can Add More (below limit), Over Limit badges
+- **Print-to-PDF**: Native browser print with aesthetic 2-column landscape layout
+- **Multi-language Support**: English, Indonesian, and Japanese translations
+- **JSON Import**: Full backup restore with settings and course data
+- **Sticky Available Courses Panel**: Stays visible while scrolling
+- **Per-Semester Credit Configuration**: Individual credit limits for each semester
+- **Improved UX**: Simplified controls and better visual feedback
+
+### Version 1.1.0
 - Added PDF export functionality using jsPDF
 - Individual semester credit limit customization
 - Settings modal for configuring credit limits

@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true'" :class="{ 'dark': darkMode }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Rencana Studi Sibermu</title>
+    <link rel="icon" type="image/svg+xml" href="https://heri.life/favicon.svg" />
+    <link rel="shortcut icon" href="https://heri.life/favicon/favicon-16x16.png" />
+    <link rel="icon" href="https://heri.life/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" href="https://heri.life/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="https://heri.life/favicon/site.webmanifest" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors duration-200">
+    <div class="container mx-auto px-4 py-8" x-data="courseApp()" x-init="init()">
+        <!-- Header -->
+        <header class="mb-6 no-print" x-data="{ mobileMenuOpen: false }">
+            <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
+                <!-- Title Section -->
+                <div class="flex justify-between items-start lg:block">
+                    <div class="flex-1">
+                        <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2" x-text="t('title')"></h1>
+                        <p class="text-sm md:text-base lg:text-lg text-gray-600 dark:text-gray-400" x-text="t('subtitle')"></p>
+                        <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-500 mt-1">
+                            <span class="font-medium" x-text="t('last_saved')"></span>
+                            <span x-text="getLastSavedText()"></span>
+                        </p>
+                    </div>
+                    
+                    <!-- Mobile Menu Toggle Button -->
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" 
+                            class="lg:hidden bg-gray-700 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-gray-500 text-white p-3 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
+                            :aria-label="mobileMenuOpen ? 'Close menu' : 'Open menu'"
+                            :aria-expanded="mobileMenuOpen">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Desktop Menu (hidden on mobile, on the right side) -->
+                <div class="hidden lg:flex flex-col gap-2">
+                    <div class="flex gap-2 flex-wrap justify-end">
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open" 
+                                    class="bg-gray-700 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-gray-500 text-white text-sm px-4 py-2 rounded flex items-center gap-2 min-h-[44px]"
+                                    aria-label="Change language"
+                                    :aria-expanded="open">
+                                <span x-text="language.toUpperCase()"></span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-700 rounded-lg shadow-lg z-10" role="menu" aria-label="Language options">
+                                <a @click.prevent="changeLanguage('en')" href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">English</a>
+                                <a @click.prevent="changeLanguage('id')" href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Bahasa Indonesia</a>
+                                <a @click.prevent="changeLanguage('ja')" href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">日本語</a>
+                            </div>
+                        </div>
+                        <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
+                                class="bg-gray-700 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-gray-500 text-white text-sm px-4 py-2 rounded flex items-center gap-2 min-h-[44px]"
+                                :aria-label="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+                            <span x-show="!darkMode" aria-hidden="true">🌙</span>
+                            <span x-show="darkMode" aria-hidden="true">☀️</span>
+                            <span x-text="darkMode ? t('light_mode') : t('dark_mode')"></span>
+                        </button>
+                        <button @click="saveToLocalStorage(); $el.innerText=t('saved'); setTimeout(() => $el.innerText=t('save_progress'), 1000)"
+                                class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('save_progress')"
+                                aria-label="Save progress">
+                        </button>
+                        <button @click="showSettingsModal = true"
+                                class="bg-purple-500 hover:bg-purple-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('settings')"
+                                aria-label="Open settings">
+                        </button>
+                        <button @click="showImportExportModal = true"
+                                class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('import_export')"
+                                aria-label="Import or export data">
+                        </button>
+                        <button @click="clearLocalStorage()"
+                                class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('reset_all')"
+                                aria-label="Reset all data">
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 text-right" x-text="t('auto_saves')">
+                    </p>
+                </div>
+
+                <!-- Mobile Menu (hidden on desktop, toggleable on mobile) -->
+                <div x-show="mobileMenuOpen" 
+                     x-collapse
+                     class="lg:hidden flex flex-col gap-2 border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div x-data="{ open: false }" class="relative col-span-2">
+                            <button @click="open = !open" 
+                                    class="w-full bg-gray-700 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-gray-500 text-white text-sm px-4 py-2 rounded flex items-center justify-center gap-2 min-h-[44px]"
+                                    aria-label="Change language"
+                                    :aria-expanded="open">
+                                <span x-text="language.toUpperCase()"></span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div x-show="open" @click.away="open = false" class="absolute left-0 mt-2 w-full bg-white dark:bg-gray-700 rounded-lg shadow-lg z-10" role="menu" aria-label="Language options">
+                                <a @click.prevent="changeLanguage('en'); open = false" href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">English</a>
+                                <a @click.prevent="changeLanguage('id'); open = false" href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Bahasa Indonesia</a>
+                                <a @click.prevent="changeLanguage('ja'); open = false" href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">日本語</a>
+                            </div>
+                        </div>
+                        <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
+                                class="bg-gray-700 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-gray-500 text-white text-sm px-4 py-2 rounded flex items-center justify-center gap-2 col-span-2 min-h-[44px]"
+                                :aria-label="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+                            <span x-show="!darkMode" aria-hidden="true">🌙</span>
+                            <span x-show="darkMode" aria-hidden="true">☀️</span>
+                            <span x-text="darkMode ? t('light_mode') : t('dark_mode')"></span>
+                        </button>
+                        <button @click="saveToLocalStorage(); $el.innerText=t('saved'); setTimeout(() => $el.innerText=t('save_progress'), 1000); mobileMenuOpen = false"
+                                class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded col-span-2 min-h-[44px]" x-text="t('save_progress')">
+                        </button>
+                        <button @click="showSettingsModal = true; mobileMenuOpen = false"
+                                class="bg-purple-500 hover:bg-purple-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('settings')">
+                        </button>
+                        <button @click="showImportExportModal = true; mobileMenuOpen = false"
+                                class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('import_export')">
+                        </button>
+                        <button @click="clearLocalStorage(); mobileMenuOpen = false"
+                                class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded col-span-2 min-h-[44px]" x-text="t('reset_all')">
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 text-center" x-text="t('auto_saves')">
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hidden file inputs (moved outside header to be accessible in main component) -->
+        <input type="file"
+               x-ref="csvImport"
+               @change="importCSV($event)"
+               accept=".csv"
+               class="hidden">
+        <input type="file"
+               x-ref="jsonImport"
+               @change="importJSON($event)"
+               accept=".json"
+               class="hidden">
+
+        <!-- Statistics Dashboard -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-200">
+            <h2 class="text-lg md:text-xl lg:text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100" x-text="t('statistics')"></h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 transition-colors duration-200">
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('total_credits_taken')"></p>
+                    <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400" x-text="totalCreditsTaken + ' ' + t('sks')"></p>
+                </div>
+                <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 transition-colors duration-200">
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('target_credits')"></p>
+                    <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400" x-text="settings.targetCredits + ' ' + t('sks')"></p>
+                </div>
+                <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4 transition-colors duration-200">
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('progress')"></p>
+                    <p class="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400" x-text="progressPercentage + '%'"></p>
+                </div>
+                <div class="bg-orange-50 dark:bg-orange-900/30 rounded-lg p-4 transition-colors duration-200">
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('unassigned_courses')"></p>
+                    <p class="text-xl sm:text-2xl font-bold text-orange-600 dark:text-orange-400" x-text="unassignedCourses.length"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Layout: Two columns -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Left Panel: Lecture Pool -->
+            <div class="md:col-span-1" id="available-courses-section">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200 md:sticky md:top-4 md:self-start">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100" x-text="t('available_courses')"></h2>
+                        <button @click="openAddModal()" 
+                                class="bg-blue-500 hover:bg-blue-600 text-white text-xs sm:text-sm px-3 py-2 rounded min-h-[44px]" 
+                                x-text="t('add')"
+                                aria-label="Add new course">
+                        </button>
+                    </div>
+
+                    <!-- Auto-Map Button -->
+                    <div x-show="unassignedCourses.length > 0" class="mb-4">
+                        <button @click="autoMapCourses()" 
+                                class="w-full bg-green-500 hover:bg-green-600 text-white text-xs sm:text-sm px-3 py-2 rounded flex items-center justify-center gap-2 min-h-[44px] transition-colors duration-200"
+                                :title="t('auto_map_description')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            <span x-text="t('auto_map_courses')"></span>
+                        </button>
+                    </div>
+
+                    <!-- Course List -->
+                    <div class="space-y-3 max-h-[calc(100vh-12rem)] overflow-y-auto">
+                        <template x-for="course in unassignedCourses" :key="course.id">
+                            <div class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 rounded-lg p-4 hover:shadow-md transition-all duration-200">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-semibold text-sm sm:text-base text-gray-800 dark:text-gray-100" x-text="course.name"></h3>
+                                    <span class="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-xs px-2 py-1 rounded whitespace-nowrap ml-2" x-text="course.credits + ' ' + t('sks')"></span>
+                                </div>
+                                <p class="text-xs sm:text-sm text-gray-700 dark:text-gray-300 mb-2" x-text="course.code"></p>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 space-y-1 mb-2">
+                                    <p><span class="font-medium" x-text="t('type')"></span>: <span x-text="course.type"></span></p>
+                                    <p><span class="font-medium" x-text="t('lecturer')"></span>: <span x-text="course.lecturer"></span></p>
+                                    <p><span class="font-medium" x-text="t('recommendation')"></span>: <span x-text="t('semester') + ' ' + course.recommendedSemester"></span></p>
+                                </div>
+                                <div class="space-y-2">
+                                    <select @change="assignCourse(course, $event.target.value); $event.target.value=''"
+                                            class="w-full text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                        <option value="" x-text="t('take_in_semester')"></option>
+                                        <template x-for="semester in semesterList" :key="semester.id">
+                                            <option :value="semester.id" x-text="semester.name"></option>
+                                        </template>
+                                    </select>
+                                    <div class="flex flex-col xxs:flex-row gap-2">
+                                        <button @click="openEditModal(course)" class="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded flex-1 min-h-[36px]" x-text="t('edit')">
+                                        </button>
+                                        <button @click="deleteCourse(course)" class="text-xs bg-red-100 dark:bg-red-900/50 hover:bg-red-200 dark:hover:bg-red-900/70 text-red-700 dark:text-red-300 px-2 py-1 rounded flex-1 min-h-[36px]" x-text="t('delete')">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <div x-show="unassignedCourses.length === 0" class="text-center text-gray-400 dark:text-gray-500 py-8" x-text="t('no_unassigned_courses')">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Semester Grid -->
+            <div class="md:col-span-2">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100" x-text="t('semester_plan')"></h2>
+                        <button @click="showValidationSummary = !showValidationSummary"
+                                class="text-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded"
+                                :aria-label="showValidationSummary ? 'Hide summary' : 'Show summary'"
+                                :aria-expanded="showValidationSummary">
+                            <span x-text="showValidationSummary ? t('hide_summary') : t('show_summary')"></span> <span x-text="t('summary')"></span>
+                        </button>
+                    </div>
+
+                    <!-- Validation Summary -->
+                    <div x-show="showValidationSummary"
+                         x-collapse
+                         class="mb-4 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+                        <h3 class="font-semibold text-sm md:text-base text-gray-700 dark:text-gray-300 mb-3" x-text="t('sks_summary_per_semester')"></h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 text-sm">
+                            <template x-for="semester in semesterList" :key="semester.id">
+                                <div class="flex justify-between items-center p-2 rounded transition-colors duration-200"
+                                     :class="{
+                                         'bg-red-100 dark:bg-red-900/30': getSemesterCredits(semester.id) > getSemesterMaxCredits(semester.id),
+                                         'bg-yellow-100 dark:bg-yellow-900/30': getSemesterCredits(semester.id) >= getSemesterMaxCredits(semester.id) * 0.9 && getSemesterCredits(semester.id) <= getSemesterMaxCredits(semester.id),
+                                         'bg-green-50 dark:bg-green-900/20': getSemesterCredits(semester.id) < getSemesterMaxCredits(semester.id) * 0.9
+                                     }">
+                                    <span class="font-medium text-xs sm:text-sm text-gray-800 dark:text-gray-200" x-text="semester.name"></span>
+                                    <span class="text-xs sm:text-sm" :class="{
+                                        'text-red-700 dark:text-red-400': getSemesterCredits(semester.id) > getSemesterMaxCredits(semester.id),
+                                        'text-yellow-700 dark:text-yellow-400': getSemesterCredits(semester.id) >= getSemesterMaxCredits(semester.id) * 0.9 && getSemesterCredits(semester.id) <= getSemesterMaxCredits(semester.id),
+                                        'text-green-700 dark:text-green-400': getSemesterCredits(semester.id) < getSemesterMaxCredits(semester.id) * 0.9
+                                    }" x-text="getSemesterCredits(semester.id) + '/' + getSemesterMaxCredits(semester.id)"></span>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-gray-300 dark:border-gray-600 flex justify-between text-xs sm:text-sm">
+                            <span class="font-semibold text-gray-700 dark:text-gray-300" x-text="t('total_sks_taken')"></span>
+                            <span class="font-bold text-blue-600 dark:text-blue-400" x-text="totalCreditsTaken + ' ' + t('sks')"></span>
+                        </div>
+                    </div>
+
+                    <!-- Semester Cards Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <template x-for="semester in semesterList" :key="semester.id">
+                            <div class="border-2 rounded-lg p-4 transition-colors duration-200"
+                                 :class="[
+                                     getSemesterBorderClass(semester.id),
+                                     semester.type === 'antara' ? 'bg-purple-50 dark:bg-purple-900/20' : 'bg-white dark:bg-gray-700'
+                                 ]">
+                                <div class="flex justify-between items-center mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-bold"
+                                            :class="semester.type === 'antara' ? 'text-purple-800 dark:text-purple-300' : 'text-gray-800 dark:text-gray-100'"
+                                            x-text="semester.name"></h3>
+                                        <span x-show="getSemesterCredits(semester.id) > getSemesterMaxCredits(semester.id)"
+                                              class="bg-red-500 dark:bg-red-600 text-white text-xs px-2 py-0.5 rounded" x-text="t('over_limit')">
+                                        </span>
+                                        <span x-show="getSemesterCredits(semester.id) === getSemesterMaxCredits(semester.id)"
+                                              class="bg-green-500 dark:bg-green-600 text-white text-xs px-2 py-0.5 rounded" x-text="t('perfect')">
+                                        </span>
+                                        <span x-show="getSemesterCredits(semester.id) < getSemesterMaxCredits(semester.id) && getSemesterCredits(semester.id) > 0"
+                                              class="bg-blue-500 dark:bg-blue-600 text-white text-xs px-2 py-0.5 rounded" x-text="t('can_add_more')">
+                                        </span>
+                                    </div>
+                                    <span class="text-sm font-medium"
+                                          :class="getCreditClass(semester.id)"
+                                          x-text="getSemesterCredits(semester.id) + '/' + getSemesterMaxCredits(semester.id) + ' ' + t('sks')"></span>
+                                </div>
+                                <div class="min-h-[100px] rounded p-2 space-y-2 transition-colors duration-200"
+                                     :class="semester.type === 'antara' ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-800'">
+                                    <template x-for="course in getSemesterCourses(semester.id)" :key="course.id">
+                                        <div class="bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded p-2 text-xs transition-colors duration-200">
+                                            <div class="flex justify-between items-start">
+                                                <div class="flex-1">
+                                                    <p class="font-semibold text-gray-800 dark:text-gray-100" x-text="course.code"></p>
+                                                    <p class="text-gray-600 dark:text-gray-300" x-text="course.name"></p>
+                                                    <p class="text-gray-500 dark:text-gray-400 mt-1" x-text="course.credits + ' ' + t('sks')"></p>
+                                                </div>
+                                                <button @click="unassignCourse(course)" class="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 ml-2">
+                                                    ✕
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <div x-show="getSemesterCourses(semester.id).length === 0" class="text-gray-400 dark:text-gray-500 text-sm text-center py-4" x-text="t('no_courses_taken')">
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add/Edit Course Modal -->
+        <div x-show="showAddModal"
+             x-cloak
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+             @click.self="closeModal()"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="modal-add-course-title">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-lg mx-auto transition-colors duration-200 max-h-[90vh] overflow-y-auto">
+                <h2 id="modal-add-course-title" class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100" x-text="editingCourse ? t('edit_course_title') : t('add_edit_course_title')"></h2>
+
+                <form @submit.prevent="saveCourse()" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('course_code')"></label>
+                        <input type="text"
+                               x-model="newCourse.code"
+                               required
+                               class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('course_name')"></label>
+                        <input type="text"
+                               x-model="newCourse.name"
+                               required
+                               class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('type')"></label>
+                        <select x-model="newCourse.type"
+                                class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="Wajib">Wajib</option>
+                            <option value="Pilihan">Pilihan</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('credits_sks')"></label>
+                        <input type="number"
+                               x-model.number="newCourse.credits"
+                               required
+                               min="1"
+                               max="8"
+                               class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('lecturer')"></label>
+                        <input type="text"
+                               x-model="newCourse.lecturer"
+                               required
+                               class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('recommended_semester')"></label>
+                        <select x-model.number="newCourse.recommendedSemester"
+                                class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <template x-for="semester in semesterList.filter(s => s.type === 'normal')" :key="semester.id">
+                                <option :value="semester.id" x-text="semester.name"></option>
+                            </template>
+                        </select>
+                    </div>
+
+                    <div class="flex gap-2 pt-4">
+                        <button type="submit"
+                                class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded" x-text="t('save')">
+                        </button>
+                        <button type="button"
+                                @click="closeModal()"
+                                class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" x-text="t('cancel')">
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Import/Export Modal -->
+        <div x-show="showImportExportModal"
+             x-cloak
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+             @click.self="showImportExportModal = false"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="modal-import-export-title">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-lg mx-auto transition-colors duration-200 max-h-[90vh] overflow-y-auto">
+                <h2 id="modal-import-export-title" class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100" x-text="t('import_export_data')"></h2>
+
+                <div class="space-y-4">
+                    <!-- Export Section -->
+                    <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3" x-text="t('export_your_plan')"></h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button @click="exportToJSON(); showImportExportModal = false"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm" x-text="t('export_as_json')">
+                            </button>
+                            <button @click="exportToCSV(); showImportExportModal = false"
+                                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm" x-text="t('export_as_csv')">
+                            </button>
+                            <button @click="exportToPDF(); showImportExportModal = false"
+                                    class="col-span-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm" x-text="t('export_as_pdf')">
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2" x-html="t('download_your_plan')">
+                        </p>
+                    </div>
+
+                    <!-- Import Section -->
+                    <div>
+                        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3" x-text="t('import_data')"></h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button @click="$refs.jsonImport.click()"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm" x-text="t('import_json_file')">
+                            </button>
+                            <button @click="$refs.csvImport.click()"
+                                    class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded text-sm" x-text="t('import_csv_file')">
+                            </button>
+                        </div>
+                        <div class="mt-2 space-y-2">
+                            <p class="text-xs text-gray-500 dark:text-gray-400" x-html="t('import_json_format')"></p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400" x-html="t('import_csv_format')"></p>
+                        </div>
+                    </div>
+
+                    <!-- Close Button -->
+                    <button @click="showImportExportModal = false"
+                            class="w-full bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded mt-4" x-text="t('close')">
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div x-show="showSettingsModal"
+             x-cloak
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto p-4"
+             @click.self="showSettingsModal = false"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="modal-settings-title">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-lg lg:max-w-2xl mx-auto my-8 transition-colors duration-200">
+                <h2 id="modal-settings-title" class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100" x-text="t('credit_limit_settings')"></h2>
+
+                <div class="space-y-4 max-h-[60vh] overflow-y-auto">
+                    <!-- Regular Semesters -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-semibold text-gray-700 dark:text-gray-300" x-text="t('regular_semesters')"></h3>
+                            <div class="flex gap-2">
+                                <button @click="if (settings.totalSemesters > 4) { settings.totalSemesters--; generateSemesterList(); }"
+                                        :disabled="settings.totalSemesters <= 4"
+                                        :class="settings.totalSemesters <= 4 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-600'"
+                                        class="bg-red-500 text-white text-xs px-3 py-1 rounded transition-colors duration-200"
+                                        x-text="'− ' + t('remove_semester')">
+                                </button>
+                                <button @click="if (settings.totalSemesters < 16) { settings.totalSemesters++; generateSemesterList(); }"
+                                        :disabled="settings.totalSemesters >= 16"
+                                        :class="settings.totalSemesters >= 16 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'"
+                                        class="bg-blue-500 text-white text-xs px-3 py-1 rounded transition-colors duration-200"
+                                        x-text="'+ ' + t('add_semester')">
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded p-2">
+                            <span x-text="t('total_semesters')"></span>: <strong x-text="settings.totalSemesters"></strong> 
+                            (<span x-text="settings.totalSemesters"></span> regular + <span x-text="Math.floor((settings.totalSemesters - 1) / 2)"></span> antara)
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            <template x-for="semester in semesterList.filter(s => s.type === 'normal')" :key="semester.id">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="semester.name"></label>
+                                    <input type="number"
+                                           x-model.number="settings.semesterMaxCredits[semester.id]"
+                                           min="1"
+                                           max="30"
+                                           class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Antara Semesters -->
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3" x-text="t('inter_semesters')"></h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            <template x-for="semester in semesterList.filter(s => s.type === 'antara')" :key="semester.id">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="semester.name"></label>
+                                    <input type="number"
+                                           x-model.number="settings.semesterMaxCredits[semester.id]"
+                                           min="1"
+                                           max="15"
+                                           class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Target SKS -->
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3" x-text="t('target_sks')"></h3>
+                        <div class="max-w-xs">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('total_target_sks')"></label>
+                            <input type="number"
+                                   x-model.number="settings.targetCredits"
+                                   min="100"
+                                   max="200"
+                                   class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex gap-2 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <button @click="generateSemesterList(); saveToLocalStorage(); showSettingsModal = false"
+                            class="flex-1 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded" x-text="t('save_settings')">
+                    </button>
+                    <button @click="showSettingsModal = false"
+                            class="flex-1 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded" x-text="t('cancel')">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        /* Safe area insets for notched devices */
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+        
+        .container {
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
+        }
+        
+        /* Custom xxs breakpoint for very small screens */
+        @media (min-width: 360px) {
+            .xxs\:flex-row {
+                flex-direction: row;
+            }
+        }
+        
+        /* Landscape mode optimizations */
+        @media (orientation: landscape) and (max-height: 500px) {
+            /* Reduce padding in landscape for more content visibility */
+            .container {
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+            
+            header {
+                margin-bottom: 1rem;
+            }
+            
+            /* Reduce modal max height in landscape */
+            [x-show="showAddModal"] > div,
+            [x-show="showImportExportModal"] > div,
+            [x-show="showSettingsModal"] > div {
+                max-height: 85vh !important;
+            }
+            
+            /* Make course list shorter in landscape */
+            .max-h-\[400px\] {
+                max-height: 250px !important;
+            }
+        }
+        
+        /* Landscape tablet optimization */
+        @media (orientation: landscape) and (min-width: 768px) and (max-height: 600px) {
+            .grid.grid-cols-1.md\:grid-cols-3 {
+                grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) !important;
+            }
+        }
+        
+        /* Accessibility: Focus states */
+        button:focus-visible,
+        select:focus-visible,
+        input:focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+        
+        /* Keyboard navigation highlight */
+        *:focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            /* Hide interactive elements and unwanted sections */
+            .no-print,
+            button,
+            input,
+            select,
+            header,
+            .mobile-menu,
+            [x-show="showAddModal"],
+            [x-show="showImportExportModal"],
+            [x-show="showSettingsModal"],
+            .md\:col-span-1,
+            #available-courses-section {
+                display: none !important;
+            }
+            
+            /* Remove sticky positioning for print */
+            .md\:sticky {
+                position: static !important;
+            }
+            
+            /* Page setup */
+            @page {
+                size: A4 landscape;
+                margin: 1.5cm;
+            }
+            
+            /* Optimize page layout */
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 10pt;
+            }
+            
+            .container {
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            /* Print Header */
+            .container::before {
+                content: '';
+                display: block;
+                text-align: center;
+                margin-bottom: 1.5rem;
+                padding-bottom: 1rem;
+                border-bottom: 2px solid #333;
+            }
+            
+            /* Statistics section - make it compact and horizontal */
+            .bg-white.rounded-lg.shadow-md.p-6.mb-6 {
+                background: #f8f9fa !important;
+                padding: 1rem !important;
+                margin-bottom: 1.5rem !important;
+                border: 1px solid #dee2e6 !important;
+                border-radius: 8px !important;
+            }
+            
+            .bg-white.rounded-lg.shadow-md.p-6.mb-6 .grid {
+                display: flex !important;
+                justify-content: space-around !important;
+                gap: 1rem !important;
+            }
+            
+            .bg-white.rounded-lg.shadow-md.p-6.mb-6 .grid > div {
+                flex: 1;
+                min-width: 0;
+                padding: 0.75rem !important;
+                border-radius: 6px !important;
+            }
+            
+            /* Force light mode colors */
+            .dark\:bg-gray-800,
+            .dark\:bg-gray-900,
+            .dark\:bg-gray-700 {
+                background: white !important;
+            }
+            
+            .dark\:text-gray-100,
+            .dark\:text-gray-200,
+            .dark\:text-gray-300 {
+                color: #212529 !important;
+            }
+            
+            .dark\:border-gray-700,
+            .dark\:border-gray-600 {
+                border-color: #dee2e6 !important;
+            }
+            
+            /* Remove shadows and transitions */
+            * {
+                box-shadow: none !important;
+                transition: none !important;
+            }
+            
+            /* Semester grid - 2 column layout */
+            .md\:col-span-2 > .bg-white {
+                background: transparent !important;
+                padding: 0 !important;
+            }
+            
+            .md\:col-span-2 .grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem !important;
+                column-gap: 1.5rem !important;
+            }
+            
+            /* Semester cards styling */
+            .md\:col-span-2 .grid > div {
+                page-break-inside: avoid;
+                break-inside: avoid;
+                border: 2px solid #dee2e6 !important;
+                border-radius: 8px !important;
+                padding: 0.75rem !important;
+                margin-bottom: 0 !important;
+                background: white !important;
+            }
+            
+            /* Antara semester special styling */
+            .bg-purple-50 {
+                background: #f3e8ff !important;
+                border-color: #a855f7 !important;
+            }
+            
+            /* Course cards within semesters */
+            .md\:col-span-2 .grid > div > div > div {
+                background: #f8f9fa !important;
+                border: 1px solid #dee2e6 !important;
+                border-radius: 4px !important;
+                padding: 0.5rem !important;
+                margin-bottom: 0.5rem !important;
+                font-size: 9pt !important;
+            }
+            
+            /* Status badges */
+            .bg-red-500,
+            .bg-red-600 {
+                background: #dc3545 !important;
+                color: white !important;
+                padding: 2px 6px !important;
+                border-radius: 3px !important;
+                font-size: 8pt !important;
+            }
+            
+            .bg-green-500,
+            .bg-green-600 {
+                background: #28a745 !important;
+                color: white !important;
+                padding: 2px 6px !important;
+                border-radius: 3px !important;
+                font-size: 8pt !important;
+            }
+            
+            .bg-blue-500,
+            .bg-blue-600 {
+                background: #007bff !important;
+                color: white !important;
+                padding: 2px 6px !important;
+                border-radius: 3px !important;
+                font-size: 8pt !important;
+            }
+            
+            .bg-yellow-500,
+            .bg-yellow-600 {
+                background: #ffc107 !important;
+                color: #000 !important;
+                padding: 2px 6px !important;
+                border-radius: 3px !important;
+                font-size: 8pt !important;
+            }
+            
+            /* Credit indicators */
+            .text-red-600,
+            .text-red-400 {
+                color: #dc3545 !important;
+                font-weight: bold !important;
+            }
+            
+            .text-yellow-600,
+            .text-yellow-400 {
+                color: #ff9800 !important;
+                font-weight: bold !important;
+            }
+            
+            .text-green-700,
+            .text-green-400 {
+                color: #28a745 !important;
+            }
+            
+            /* Show validation summary */
+            [x-show="showValidationSummary"] {
+                display: block !important;
+                background: #e7f3ff !important;
+                border: 1px solid #0066cc !important;
+                padding: 1rem !important;
+                margin-bottom: 1.5rem !important;
+                border-radius: 8px !important;
+                page-break-inside: avoid;
+            }
+            
+            /* Hide validation summary toggle button */
+            [x-show="showValidationSummary"] ~ * button {
+                display: none !important;
+            }
+            
+            /* Ensure proper text sizing */
+            h1, h2 {
+                font-size: 14pt !important;
+                font-weight: bold !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            h3 {
+                font-size: 11pt !important;
+                font-weight: bold !important;
+            }
+            
+            /* Print footer */
+            .container::after {
+                content: 'Printed: ' attr(data-print-date);
+                display: block;
+                text-align: center;
+                margin-top: 2rem;
+                padding-top: 1rem;
+                border-top: 1px solid #dee2e6;
+                font-size: 8pt;
+                color: #6c757d;
+            }
+        }
+    </style>
+
+    <script>
+        function courseApp() {
+            return {
+                language: localStorage.getItem('language') || 'en',
+                translations: {},
+                settings: {
+                    totalSemesters: 8,
+                    semesterMaxCredits: {
+                        '1': 20, '2': 20, '3': 24, '4': 24, '5': 24, '6': 24, '7': 24, '8': 24,
+                        'antara-1': 9, 'antara-2': 9, 'antara-3': 9
+                    },
+                    targetCredits: 145
+                },
+                semesterList: [],
+                courses: [],
+                showAddModal: false,
+                showValidationSummary: false,
+                showImportExportModal: false,
+                showSettingsModal: false,
+                lastSaved: null,
+                editingCourse: null,
+                newCourse: {
+                    id: '',
+                    code: '',
+                    name: '',
+                    type: 'Wajib',
+                    credits: 0,
+                    Dosen: '',
+                    recommendedSemester: 1,
+                    assignedSemester: null
+                },
+
+                async init() {
+                    await this.loadTranslations();
+                    await this.loadData();
+                    this.loadFromLocalStorage();
+                    this.generateSemesterList();
+                },
+
+                generateSemesterList() {
+                    this.semesterList = [];
+                    const totalSemesters = this.settings.totalSemesters || 8;
+                    
+                    for (let i = 1; i <= totalSemesters; i++) {
+                        this.semesterList.push({
+                            id: String(i),
+                            name: `Semester ${i}`,
+                            type: 'normal'
+                        });
+                        
+                        // Add antara semester after every 2nd semester, but not after the last semester
+                        if (i % 2 === 0 && i < totalSemesters) {
+                            const antaraNum = i / 2;
+                            this.semesterList.push({
+                                id: `antara-${antaraNum}`,
+                                name: `Antara ${antaraNum}`,
+                                type: 'antara'
+                            });
+                        }
+                    }
+                    
+                    // Ensure semesterMaxCredits exists for all semesters
+                    for (let i = 1; i <= totalSemesters; i++) {
+                        if (!this.settings.semesterMaxCredits[String(i)]) {
+                            // Semester 1 and 2: 20 credits, Semester 3+: 24 credits
+                            this.settings.semesterMaxCredits[String(i)] = i <= 2 ? 20 : 24;
+                        }
+                    }
+                    
+                    // Ensure antara semester credits exist
+                    const antaraCount = Math.floor((totalSemesters - 1) / 2);
+                    for (let i = 1; i <= antaraCount; i++) {
+                        if (!this.settings.semesterMaxCredits[`antara-${i}`]) {
+                            this.settings.semesterMaxCredits[`antara-${i}`] = 9;
+                        }
+                    }
+                },
+
+                t(key) {
+                    return this.translations[key] || key;
+                },
+
+                async loadTranslations() {
+                    try {
+                        const response = await fetch(`./locales/${this.language}.json`);
+                        this.translations = await response.json();
+                        document.documentElement.lang = this.language;
+                    } catch (error) {
+                        console.error('Error loading translations:', error);
+                    }
+                },
+
+                changeLanguage(lang) {
+                    this.language = lang;
+                    localStorage.setItem('language', lang);
+                    this.loadTranslations();
+                },
+
+                async loadData() {
+                    try {
+                        const response = await fetch('./data/courses.json');
+                        const data = await response.json();
+
+                        if (data.settings) {
+                            this.settings = data.settings;
+                            // Ensure totalSemesters exists in settings
+                            if (!this.settings.totalSemesters) {
+                                this.settings.totalSemesters = 8;
+                            }
+                        }
+
+                        this.courses = data.courses || [];
+                    } catch (error) {
+                        console.error('Error loading data:', error);
+                    }
+                },
+
+                saveToLocalStorage() {
+                    try {
+                        const now = new Date().toISOString();
+                        const dataToSave = {
+                            settings: this.settings,
+                            courses: this.courses,
+                            lastSaved: now
+                        };
+                        localStorage.setItem('lectureStudyPlan', JSON.stringify(dataToSave));
+                        this.lastSaved = now;
+                    } catch (error) {
+                        console.error('Error saving to localStorage:', error);
+                    }
+                },
+
+                loadFromLocalStorage() {
+                    try {
+                        const saved = localStorage.getItem('lectureStudyPlan');
+                        if (saved) {
+                            const data = JSON.parse(saved);
+                            if (data.settings) {
+                                this.settings = data.settings;
+                                // Regenerate semester list based on loaded settings
+                                this.generateSemesterList();
+                            }
+                            if (data.courses) {
+                                this.courses = data.courses;
+                            }
+                            if (data.lastSaved) {
+                                this.lastSaved = data.lastSaved;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error loading from localStorage:', error);
+                    }
+                },
+
+                getLastSavedText() {
+                    if (!this.lastSaved) return 'Never saved';
+                    const date = new Date(this.lastSaved);
+                    const now = new Date();
+                    const diffMs = now - date;
+                    const diffMins = Math.floor(diffMs / 60000);
+
+                    if (diffMins < 1) return 'Just now';
+                    if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+                    const diffHours = Math.floor(diffMins / 60);
+                    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+                    return date.toLocaleString();
+                },
+
+                clearLocalStorage() {
+                    if (confirm('Are you sure you want to clear all saved data? This will reset to the default lectures from JSON.')) {
+                        localStorage.removeItem('lectureStudyPlan');
+                        location.reload();
+                    }
+                },
+
+                exportToJSON() {
+                    const dataToExport = {
+                        settings: this.settings,
+                        courses: this.courses,
+                        exportDate: new Date().toISOString()
+                    };
+
+                    const jsonString = JSON.stringify(dataToExport, null, 2);
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `course-plan-${new Date().toISOString().split('T')[0]}.json`;
+                    link.click();
+
+                    URL.revokeObjectURL(url);
+                },
+
+                exportToCSV() {
+                    const headers = ['ID', 'Code', 'Name', 'Type', 'Credits', 'Lecturer', 'Recommended Semester', 'Assigned Semester'];
+                    const rows = this.courses.map(c => [
+                        c.id,
+                        c.code,
+                        c.name,
+                        c.type,
+                        c.credits,
+                        c.lecturer,
+                        c.recommendedSemester,
+                        c.assignedSemester || ''
+                    ]);
+
+                    const csvContent = [
+                        headers.join(','),
+                        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+                    ].join('\n');
+
+                    const blob = new Blob([csvContent], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `course-plan-${new Date().toISOString().split('T')[0]}.csv`;
+                    link.click();
+
+                    URL.revokeObjectURL(url);
+                },
+
+                exportToPDF() {
+                    // Ensure validation summary is shown for print
+                    this.showValidationSummary = true;
+                    
+                    // Small delay to ensure DOM is updated before printing
+                    setTimeout(() => {
+                        window.print();
+                    }, 100);
+                },
+
+                importCSV(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const text = e.target.result;
+                            const lines = text.split('\n');
+                            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+
+                            const newCourses = [];
+                            for (let i = 1; i < lines.length; i++) {
+                                if (!lines[i].trim()) continue;
+
+                                const values = lines[i].match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g).map(v => v.trim().replace(/^"|"$/g, ''));
+
+                                const course = {
+                                    id: values[0] || Date.now().toString() + i,
+                                    code: values[1] || '',
+                                    name: values[2] || '',
+                                    type: values[3] || 'Wajib',
+                                    credits: parseInt(values[4]) || 0,
+                                    lecturer: values[5] || '',
+                                    recommendedSemester: parseInt(values[6]) || 1,
+                                    assignedSemester: values[7] || null
+                                };
+                                newCourses.push(course);
+                            }
+
+                            if (confirm(this.t('import_confirm').replace('${newCourses.length}', newCourses.length))) {
+                                this.courses = newCourses;
+                                this.saveToLocalStorage();
+                                this.showImportExportModal = false;
+                                alert(this.t('import_successful'));
+                            }
+                        } catch (error) {
+                            console.error('Error parsing CSV:', error);
+                            alert(this.t('import_error'));
+                        }
+                        event.target.value = '';
+                    };
+                    reader.readAsText(file);
+                },
+
+                importJSON(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            
+                            // Validate the JSON structure
+                            if (!data.courses || !Array.isArray(data.courses)) {
+                                throw new Error('Invalid JSON format: missing courses array');
+                            }
+
+                            const courseCount = data.courses.length;
+                            const confirmMessage = `Import ${courseCount} courses from JSON backup?${data.settings ? '\n\nThis will also import settings including semester configuration and credit limits.' : ''}`;
+                            
+                            if (confirm(confirmMessage)) {
+                                // Import courses
+                                this.courses = data.courses;
+                                
+                                // Import settings if available
+                                if (data.settings) {
+                                    this.settings = {
+                                        ...this.settings,
+                                        ...data.settings
+                                    };
+                                    // Ensure totalSemesters exists
+                                    if (!this.settings.totalSemesters) {
+                                        this.settings.totalSemesters = 8;
+                                    }
+                                    // Regenerate semester list based on imported settings
+                                    this.generateSemesterList();
+                                }
+                                
+                                this.saveToLocalStorage();
+                                this.showImportExportModal = false;
+                                alert(this.t('import_successful'));
+                            }
+                        } catch (error) {
+                            console.error('Error parsing JSON:', error);
+                            alert(`${this.t('import_error')}\n\nError: ${error.message}`);
+                        }
+                        event.target.value = '';
+                    };
+                    reader.readAsText(file);
+                },
+
+                getEmptyCourse() {
+                    return {
+                        id: '',
+                        code: '',
+                        name: '',
+                        type: 'Wajib',
+                        credits: 0,
+                        Dosen: '',
+                        recommendedSemester: 1,
+                        assignedSemester: null
+                    };
+                },
+
+                get unassignedCourses() {
+                    return this.courses.filter(c => !c.assignedSemester);
+                },
+
+                get totalCreditsTaken() {
+                    return this.courses
+                        .filter(c => c.assignedSemester)
+                        .reduce((sum, c) => sum + c.credits, 0);
+                },
+
+                get progressPercentage() {
+                    return Math.round((this.totalCreditsTaken / this.settings.targetCredits) * 100);
+                },
+
+                openAddModal() {
+                    this.editingCourse = null;
+                    this.newCourse = this.getEmptyCourse();
+                    this.showAddModal = true;
+                },
+
+                openEditModal(course) {
+                    this.editingCourse = course;
+                    this.newCourse = { ...course };
+                    this.showAddModal = true;
+                },
+
+                saveCourse() {
+                    if (this.editingCourse) {
+                        // Update existing course
+                        const index = this.courses.findIndex(c => c.id === this.editingCourse.id);
+                        if (index !== -1) {
+                            this.courses[index] = { ...this.newCourse };
+                        }
+                    } else {
+                        // Add new course
+                        this.newCourse.id = Date.now().toString();
+                        this.courses.push({ ...this.newCourse });
+                    }
+                    this.closeModal();
+                    this.saveToLocalStorage();
+                },
+
+                deleteCourse(course) {
+                    if (confirm(`Delete ${course.code} - ${course.name}?`)) {
+                        const index = this.courses.findIndex(c => c.id === course.id);
+                        if (index !== -1) {
+                            this.courses.splice(index, 1);
+                            this.saveToLocalStorage();
+                        }
+                    }
+                },
+
+                closeModal() {
+                    this.showAddModal = false;
+                    this.editingCourse = null;
+                    this.newCourse = this.getEmptyCourse();
+                },
+
+                assignCourse(course, semester) {
+                    if (!semester) return;
+
+                    const currentCredits = this.getSemesterCredits(semester);
+                    const maxCredits = this.getSemesterMaxCredits(semester);
+                    const newTotal = currentCredits + course.credits;
+
+                    if (newTotal > maxCredits) {
+                        const confirmation = confirm(
+                            `${this.t('warning_exceed_limit')}\n\n` +
+                            `Semester: ${this.getSemesterName(semester)}\n` +
+                            `${this.t('current')}: ${currentCredits} ${this.t('sks')}\n` +
+                            `${this.t('adding')}: ${course.credits} ${this.t('sks')}\n` +
+                            `${this.t('new_total')}: ${newTotal} ${this.t('sks')}\n` +
+                            `${this.t('limit')}: ${maxCredits} ${this.t('sks')}\n` +
+                            `${this.t('exceeds_by')}: ${newTotal - maxCredits} ${this.t('sks')}\n\n` +
+                            `${this.t('proceed')}?`
+                        );
+                        if (!confirmation) return;
+                    }
+
+                    course.assignedSemester = semester;
+                    this.saveToLocalStorage();
+                },
+
+                autoMapCourses() {
+                    let mappedCount = 0;
+                    const unassigned = this.courses.filter(c => !c.assignedSemester);
+                    
+                    unassigned.forEach(course => {
+                        // Skip if no recommended semester
+                        if (!course.recommendedSemester) return;
+                        
+                        // Map to recommended semester if it exists in semesterList
+                        const recommendedSemester = String(course.recommendedSemester);
+                        const semesterExists = this.semesterList.find(s => s.id === recommendedSemester);
+                        
+                        if (semesterExists) {
+                            course.assignedSemester = recommendedSemester;
+                            mappedCount++;
+                        }
+                    });
+                    
+                    if (mappedCount > 0) {
+                        this.saveToLocalStorage();
+                        alert(`✓ ${mappedCount} ${this.t('courses_auto_mapped')}`);
+                    }
+                },
+
+                getSemesterName(semesterId) {
+                    const semester = this.semesterList.find(s => s.id === semesterId);
+                    return semester ? semester.name : semesterId;
+                },
+
+                unassignCourse(course) {
+                    course.assignedSemester = null;
+                    this.saveToLocalStorage();
+                },
+
+                getSemesterCourses(semester) {
+                    return this.courses.filter(c => c.assignedSemester === semester);
+                },
+
+                getSemesterCredits(semester) {
+                    return this.getSemesterCourses(semester)
+                        .reduce((sum, c) => sum + c.credits, 0);
+                },
+
+                getSemesterMaxCredits(semester) {
+                    return this.settings.semesterMaxCredits[semester] || 24;
+                },
+
+                getCreditClass(semester) {
+                    const credits = this.getSemesterCredits(semester);
+                    const max = this.getSemesterMaxCredits(semester);
+                    if (credits > max) return 'text-red-600 dark:text-red-400';
+                    if (credits === max) return 'text-green-600 dark:text-green-400';
+                    return 'text-blue-600 dark:text-blue-400';
+                },
+
+                getSemesterBorderClass(semester) {
+                    const credits = this.getSemesterCredits(semester);
+                    const max = this.getSemesterMaxCredits(semester);
+                    if (credits > max) return 'border-red-500 dark:border-red-600';
+                    if (credits === max) return 'border-green-500 dark:border-green-600';
+                    return 'border-blue-500 dark:border-blue-600';
+                }
+            };
+        }
+    </script>
+
+    <!-- Footer with credit -->
+    <footer class="mt-12 py-6 text-center text-sm text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700">
+        <p>
+            &copy; <span x-text="new Date().getFullYear()"></span>
+            <a
+                href="https://heri.life"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200 font-medium"
+            >
+                Heri Rusmanto
+            </a>
+        </p>
+    </footer>
+</body>
+</html>

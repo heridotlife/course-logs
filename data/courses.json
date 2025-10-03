@@ -1,0 +1,700 @@
+{
+  "settings": {
+    "semesterMaxCredits": {
+      "1": 20,
+      "2": 20,
+      "3": 24,
+      "4": 24,
+      "5": 24,
+      "6": 24,
+      "7": 24,
+      "8": 24,
+      "antara-1": 9,
+      "antara-2": 9,
+      "antara-3": 9
+    },
+    "targetCredits": 145
+  },
+  "courses": [
+    {
+      "id": "1",
+      "code": "AIK001",
+      "name": "Al-Islam dan Kemuhammadiyahan 1",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Chusnul Azhar, S.Pd.I., M.Pd.I.",
+      "recommendedSemester": 1,
+      "assignedSemester": null
+    },
+    {
+      "id": "2",
+      "code": "AIKM001",
+      "name": "AIK multikultural 1 (Non Muslim)",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Velandani Prakoso, S.IP., M.IP.",
+      "recommendedSemester": 1,
+      "assignedSemester": null
+    },
+    {
+      "id": "3",
+      "code": "KUE001",
+      "name": "Bahasa Inggris",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Septia Ayu Pratiwi, M.Pd.",
+      "recommendedSemester": 1,
+      "assignedSemester": null
+    },
+    {
+      "id": "4",
+      "code": "KUI001",
+      "name": "Bahasa Indonesia",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Tri Wahyono, M.Pd.",
+      "recommendedSemester": 1,
+      "assignedSemester": null
+    },
+    {
+      "id": "5",
+      "code": "SIF001",
+      "name": "Algoritma dan Pemrograman",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhamad Rosidin, M.Kom",
+      "recommendedSemester": 1,
+      "assignedSemester": null
+    },
+    {
+      "id": "6",
+      "code": "SIF002",
+      "name": "Basis Data",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Wicaksono Yuli Sulistyo, M.Kom",
+      "recommendedSemester": 1,
+      "assignedSemester": null
+    },
+    {
+      "id": "7",
+      "code": "SIF003",
+      "name": "Dasar-dasar Sistem Informasi",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Khairina Eka Setyaputri, S.T., M.Kom.",
+      "recommendedSemester": 1,
+      "assignedSemester": null
+    },
+    {
+      "id": "8",
+      "code": "SIF004",
+      "name": "Pemrograman Web Dinamis",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Wicaksono Yuli Sulistyo, M.Kom",
+      "recommendedSemester": 1,
+      "assignedSemester": null
+    },
+    {
+      "id": "9",
+      "code": "AIK002",
+      "name": "Al-Islam dan Kemuhammadiyahan 2",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Chusnul Azhar, S.Pd.I., M.Pd.I.",
+      "recommendedSemester": 2,
+      "assignedSemester": null
+    },
+    {
+      "id": "10",
+      "code": "AIKM002",
+      "name": "AIK multikultural 2",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Muhammad Muzaki., M.Pd",
+      "recommendedSemester": 2,
+      "assignedSemester": null
+    },
+    {
+      "id": "11",
+      "code": "PCSS001",
+      "name": "Pancasila",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Muhammad Rizal",
+      "recommendedSemester": 2,
+      "assignedSemester": null
+    },
+    {
+      "id": "12",
+      "code": "SIF005",
+      "name": "Pemrograman Berorientasi Obyek",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Wicaksono Yuli Sulistyo, M.Kom",
+      "recommendedSemester": 2,
+      "assignedSemester": null
+    },
+    {
+      "id": "13",
+      "code": "SIF006",
+      "name": "Statistika dan Probabilitas",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Septia Ayu Pratiwi, M.Pd.",
+      "recommendedSemester": 2,
+      "assignedSemester": null
+    },
+    {
+      "id": "14",
+      "code": "SIF007",
+      "name": "Matematika Dasar",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Septia Ayu Pratiwi, M.Pd.",
+      "recommendedSemester": 2,
+      "assignedSemester": null
+    },
+    {
+      "id": "15",
+      "code": "SIF030",
+      "name": "Pengantar Manajemen",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Agniya Thahira, S.M., M.M",
+      "recommendedSemester": 2,
+      "assignedSemester": null
+    },
+    {
+      "id": "16",
+      "code": "SIF019",
+      "name": "Interaksi manusia dan komputer",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhammad Fauzan Gustafi, M.Kom.",
+      "recommendedSemester": 2,
+      "assignedSemester": null
+    },
+    {
+      "id": "17",
+      "code": "SIF009",
+      "name": "Pengantar Sistem Informasi Manajemen",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "MUHAMMAD HAEDAR ZHAFRAN HIDAYATULLAH, S.Kom",
+      "recommendedSemester": 2,
+      "assignedSemester": null
+    },
+    {
+      "id": "18",
+      "code": "SIHK002",
+      "name": "Filsafat Ilmu",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Muhammad Rizal",
+      "recommendedSemester": "antara-1",
+      "assignedSemester": null
+    },
+    {
+      "id": "19",
+      "code": "SIF011",
+      "name": "Manajemen Sumber Daya Manusia",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Khairina Eka Setyaputri, S.T., M.Kom.",
+      "recommendedSemester": "antara-1",
+      "assignedSemester": null
+    },
+    {
+      "id": "20",
+      "code": "SIF012",
+      "name": "Pengantar Keamanan Informasi",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhammad Fauzan Gustafi, M.Kom.",
+      "recommendedSemester": "antara-1",
+      "assignedSemester": null
+    },
+    {
+      "id": "21",
+      "code": "KWNSI001",
+      "name": "Kewarganegaraan",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Dinda Riskanita",
+      "recommendedSemester": "antara-1",
+      "assignedSemester": null
+    },
+    {
+      "id": "22",
+      "code": "AIK003",
+      "name": "Al-Islam dan Kemuhammadiyahan 3",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Miftahul Haq, S.H.I., M.S.I",
+      "recommendedSemester": 3,
+      "assignedSemester": null
+    },
+    {
+      "id": "23",
+      "code": "SIF013",
+      "name": "Jaringan Komputer",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhamad Rosidin, M.Kom",
+      "recommendedSemester": 3,
+      "assignedSemester": null
+    },
+    {
+      "id": "24",
+      "code": "SIF015",
+      "name": "Technopreneurship",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Khairina Eka Setyaputri, S.T., M.Kom.",
+      "recommendedSemester": 3,
+      "assignedSemester": null
+    },
+    {
+      "id": "25",
+      "code": "SIF016",
+      "name": "Pemrograman Web Framework",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Wicaksono Yuli Sulistyo, M.Kom",
+      "recommendedSemester": 3,
+      "assignedSemester": null
+    },
+    {
+      "id": "26",
+      "code": "SIF017",
+      "name": "Struktur Data",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhammad Fauzan Gustafi, M.Kom.",
+      "recommendedSemester": 3,
+      "assignedSemester": null
+    },
+    {
+      "id": "27",
+      "code": "SIF018",
+      "name": "Matematika Diskrit",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Septia Ayu Pratiwi, M.Pd.",
+      "recommendedSemester": 3,
+      "assignedSemester": null
+    },
+    {
+      "id": "28",
+      "code": "SIF010",
+      "name": "User Interface/User Experience",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "MUHAMMAD HAEDAR ZHAFRAN HIDAYATULLAH, S.Kom",
+      "recommendedSemester": 3,
+      "assignedSemester": null
+    },
+    {
+      "id": "29",
+      "code": "SIF020",
+      "name": "Teori Informasi",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Khairina Eka Setyaputri, S.T., M.Kom.",
+      "recommendedSemester": 4,
+      "assignedSemester": null
+    },
+    {
+      "id": "30",
+      "code": "SIF021",
+      "name": "Sistem Operasi",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Muhamad Rosidin, M.Kom",
+      "recommendedSemester": 4,
+      "assignedSemester": null
+    },
+    {
+      "id": "31",
+      "code": "SIF022",
+      "name": "Manajemen dan Administrasi Basis Data",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "MUHAMMAD HAEDAR ZHAFRAN HIDAYATULLAH, S.Kom",
+      "recommendedSemester": 4,
+      "assignedSemester": null
+    },
+    {
+      "id": "32",
+      "code": "SIF023",
+      "name": "Manajemen Bisnis",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "MUHAMMAD HAEDAR ZHAFRAN HIDAYATULLAH, S.Kom",
+      "recommendedSemester": 4,
+      "assignedSemester": null
+    },
+    {
+      "id": "33",
+      "code": "SIF024",
+      "name": "Sistem Penunjang Keputusan",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Khairina Eka Setyaputri, S.T., M.Kom.",
+      "recommendedSemester": 4,
+      "assignedSemester": null
+    },
+    {
+      "id": "34",
+      "code": "SIF025",
+      "name": "Analisis dan Visualisasi Data",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhamad Rosidin, M.Kom",
+      "recommendedSemester": 4,
+      "assignedSemester": null
+    },
+    {
+      "id": "35",
+      "code": "SIF026",
+      "name": "Content Management System",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhammad Fauzan Gustafi, M.Kom.",
+      "recommendedSemester": 4,
+      "assignedSemester": null
+    },
+    {
+      "id": "36",
+      "code": "SIF042",
+      "name": "Perilaku Organisasi",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Velandani Prakoso, S.IP., M.IP.",
+      "recommendedSemester": "antara-2",
+      "assignedSemester": null
+    },
+    {
+      "id": "37",
+      "code": "SIF043",
+      "name": "Manajemen Pemasaran",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "MUHAMMAD HAEDAR ZHAFRAN HIDAYATULLAH, S.Kom",
+      "recommendedSemester": "antara-2",
+      "assignedSemester": null
+    },
+    {
+      "id": "38",
+      "code": "SIF028",
+      "name": "Digital Forensik",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhammad Fauzan Gustafi, M.Kom.",
+      "recommendedSemester": "antara-2",
+      "assignedSemester": null
+    },
+    {
+      "id": "39",
+      "code": "SIF044",
+      "name": "Sistem Informasi Kesehatan",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Muhammad Fauzan Gustafi, M.Kom.",
+      "recommendedSemester": "antara-2",
+      "assignedSemester": null
+    },
+    {
+      "id": "40",
+      "code": "SIF014",
+      "name": "Teori Bahasa Otomata",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Khairina Eka Setyaputri, S.T., M.Kom.",
+      "recommendedSemester": 5,
+      "assignedSemester": null
+    },
+    {
+      "id": "41",
+      "code": "SIF008",
+      "name": "Etika Profesi",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Khairina Eka Setyaputri, S.T., M.Kom.",
+      "recommendedSemester": 5,
+      "assignedSemester": null
+    },
+    {
+      "id": "42",
+      "code": "SIF031",
+      "name": "Rekayasa Perangkat Lunak",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Muhamad Rosidin, M.Kom",
+      "recommendedSemester": 5,
+      "assignedSemester": null
+    },
+    {
+      "id": "43",
+      "code": "SIF032",
+      "name": "Data Science",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Wicaksono Yuli Sulistyo, M.Kom",
+      "recommendedSemester": 5,
+      "assignedSemester": null
+    },
+    {
+      "id": "44",
+      "code": "SIF033",
+      "name": "Pengolahan Citra Digital",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhamad Rosidin, M.Kom",
+      "recommendedSemester": 5,
+      "assignedSemester": null
+    },
+    {
+      "id": "45",
+      "code": "SIF034",
+      "name": "Bahasa Inggris TOEFL",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Septia Ayu Pratiwi, M.Pd.",
+      "recommendedSemester": 5,
+      "assignedSemester": null
+    },
+    {
+      "id": "46",
+      "code": "SIF029",
+      "name": "Metode Penelitian",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Wicaksono Yuli Sulistyo, M.Kom",
+      "recommendedSemester": 5,
+      "assignedSemester": null
+    },
+    {
+      "id": "47",
+      "code": "SIF027",
+      "name": "Desain Grafis",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhammad Fauzan Gustafi, M.Kom.",
+      "recommendedSemester": 5,
+      "assignedSemester": null
+    },
+    {
+      "id": "48",
+      "code": "SIF035",
+      "name": "Manajemen Proyek Teknologi Informasi",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "MUHAMMAD HAEDAR ZHAFRAN HIDAYATULLAH, S.Kom",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "49",
+      "code": "SIF036",
+      "name": "Data Mining",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Septia Ayu Pratiwi, M.Pd.",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "50",
+      "code": "SIF037",
+      "name": "Manajemen Resiko",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Khairina Eka Setyaputri, S.T., M.Kom.",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "51",
+      "code": "SIF038",
+      "name": "Metaverse dan AI",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhammad Fauzan Gustafi, M.Kom.",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "52",
+      "code": "SIF049",
+      "name": "Pengembangan Perangkat Lunak",
+      "type": "Pilihan",
+      "credits": 2,
+      "lecturer": "Team Teaching Wicaks dan Idim",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "53",
+      "code": "SIF040",
+      "name": "Animasi Komputer",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhammad Fauzan Gustafi, M.Kom.",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "54",
+      "code": "SIF041",
+      "name": "Pemrograman Front End",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhamad Rosidin, M.Kom",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "55",
+      "code": "SIF050",
+      "name": "Capstone Project (MK Sebleumnya : Pengembangan Perangkat Lunak)",
+      "type": "Lainnya",
+      "credits": 3,
+      "lecturer": "Muhamad Rosidin, M.Kom;Wicaksono Yuli Sulistyo, M.Kom",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "56",
+      "code": "SIF053",
+      "name": "(Pilihan 1) Rekayasa Automasi Sistem Informasi",
+      "type": "Pilihan",
+      "credits": 2,
+      "lecturer": "Wicaksono Yuli Sulistyo, M.Kom",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "57",
+      "code": "SIF046",
+      "name": "(Pilihan 1) Machine Learning",
+      "type": "Pilihan",
+      "credits": 2,
+      "lecturer": "Wicaksono Yuli Sulistyo, M.Kom",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "58",
+      "code": "SIF035",
+      "name": "(Pilihan 2) Manajemen Proyek Teknologi Informasi ",
+      "type": "Pilihan",
+      "credits": 2,
+      "lecturer": "Muhammad Haedar Zhafran H. M.Kom.",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "59",
+      "code": "SIF037",
+      "name": "(Pilihan 2) Manajemen Resiko",
+      "type": "Pilihan",
+      "credits": 2,
+      "lecturer": "Khairina Eka Setyaputri, M.Kom.",
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    },
+    {
+      "id": "60",
+      "code": "SIF045",
+      "name": "Big Data Analisis",
+      "type": "Wajib",
+      "credits": 2,
+      "lecturer": "Septia Ayu Pratiwi M.Pd.",
+      "recommendedSemester": 7,
+      "assignedSemester": null
+    },
+    {
+      "id": "61",
+      "code": "SIF039",
+      "name": "Pemrograman Terdistribusi",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Muhamad Rosidin, M.Kom.",
+      "recommendedSemester": 7,
+      "assignedSemester": null
+    },
+    {
+      "id": "62",
+      "code": "SIF047",
+      "name": "Pemrograman Mobile",
+      "type": "Wajib",
+      "credits": 3,
+      "lecturer": "Wicaksono Yuli Sulistyo, M.Kom",
+      "recommendedSemester": 7,
+      "assignedSemester": null
+    },
+    {
+      "id": "63",
+      "code": "SIF048",
+      "name": "Tugas Akhir",
+      "type": "Wajib",
+      "credits": 4,
+      "lecturer": "Semua Dosen",
+      "recommendedSemester": 7,
+      "assignedSemester": null
+    },
+    {
+      "id": "64",
+      "code": "SIF051",
+      "name": "Deep Learning",
+      "type": "Pilihan",
+      "credits": 2,
+      "lecturer": null,
+      "recommendedSemester": 8,
+      "assignedSemester": null
+    },
+    {
+      "id": "65",
+      "code": "SIF052",
+      "name": "Natural Language Processing (NLP)",
+      "type": "Pilihan",
+      "credits": 2,
+      "lecturer": null,
+      "recommendedSemester": 8,
+      "assignedSemester": null
+    },
+    {
+      "id": "66",
+      "code": "SIF054",
+      "name": "Enterprise Resource Planning (ERP)",
+      "type": "Pilihan",
+      "credits": 2,
+      "lecturer": null,
+      "recommendedSemester": 8,
+      "assignedSemester": null
+    },
+    {
+      "id": "67",
+      "code": "SIF055",
+      "name": "Audit Sistem Informasi",
+      "type": "Pilihan",
+      "credits": 2,
+      "lecturer": null,
+      "recommendedSemester": 8,
+      "assignedSemester": null
+    },
+    {
+      "id": "68",
+      "code": "PBMSI001",
+      "name": "Projek Berbasis Masyarakat Universitas",
+      "type": "Wajib",
+      "credits": 4,
+      "lecturer": null,
+      "recommendedSemester": 6,
+      "assignedSemester": null
+    }
+  ]
+}
