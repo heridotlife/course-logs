@@ -5,15 +5,26 @@
   X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# Note: Cloudflare automatically handles compression (Brotli/gzip)
+# Don't set Content-Encoding manually as it causes ERR_CONTENT_DECODING_FAILED
   
-# Cache static assets
+# Cache static assets (1 year - immutable)
 /dist/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Cache HTML with revalidation
+# Cache data files (1 hour)
+/data/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# Cache translation files (1 day)
+/locales/*
+  Cache-Control: public, max-age=86400, must-revalidate
+
+# Cache HTML with revalidation (1 hour)
 /*.html
   Cache-Control: public, max-age=3600, must-revalidate
 
-# Service Worker
+# Service Worker (when added)
 /sw.js
   Cache-Control: no-cache, no-store, must-revalidate
