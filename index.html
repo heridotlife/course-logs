@@ -54,7 +54,8 @@
                 </div>
 
                 <!-- Desktop Menu (hidden on mobile, on the right side) -->
-                <div class="hidden lg:flex flex-col gap-2">
+                <!-- Fix CLS: Use fixed height to prevent layout shift -->
+                <div class="hidden lg:flex flex-col gap-2 min-h-[88px]">
                     <div class="flex gap-2 flex-wrap justify-end">
                         <div x-data="{ open: false }" class="relative">
                             <button @click="open = !open" 
@@ -236,7 +237,10 @@
                             </div>
                         </template>
 
-                        <div x-show="unassignedCourses.length === 0" class="text-center text-gray-400 dark:text-gray-500 py-8" x-text="t('no_unassigned_courses')">
+                        <!-- Fix CLS: Reserve space for empty state to prevent layout shift -->
+                        <div x-show="unassignedCourses.length === 0" 
+                             class="text-center text-gray-400 dark:text-gray-500 py-8 min-h-[100px] flex items-center justify-center" 
+                             x-text="t('no_unassigned_courses')">
                         </div>
                     </div>
                 </div>
@@ -326,7 +330,10 @@
                                             </div>
                                         </div>
                                     </template>
-                                    <div x-show="getSemesterCourses(semester.id).length === 0" class="text-gray-400 dark:text-gray-500 text-sm text-center py-4" x-text="t('no_courses_taken')">
+                                    <!-- Fix CLS: Reserve min height for empty state -->
+                                    <div x-show="getSemesterCourses(semester.id).length === 0" 
+                                         class="text-gray-400 dark:text-gray-500 text-sm text-center py-4 min-h-[60px] flex items-center justify-center" 
+                                         x-text="t('no_courses_taken')">
                                     </div>
                                 </div>
                             </div>
