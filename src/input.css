@@ -58,6 +58,16 @@ body {
   }
 }
 
+/* Performance: Reduce CLS by reserving space for dynamic content */
+[x-show] {
+  transition: opacity 150ms ease-in-out;
+}
+
+/* Prevent layout shift on Alpine.js initialization */
+[x-cloak] {
+  display: none !important;
+}
+
 /* Accessibility: Focus states */
 button:focus-visible,
 select:focus-visible,
