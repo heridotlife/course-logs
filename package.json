@@ -1,0 +1,34 @@
+{
+  "name": "course-logs",
+  "version": "1.0.0",
+  "description": "Rencana Studi Sibermu - Course Planning Application",
+  "type": "module",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "build:js": "node build-js.js",
+    "watch:js": "node build-js.js --watch",
+    "dev": "npm-run-all --parallel watch:css watch:js",
+    "build": "npm-run-all build:css build:js",
+    "deploy": "pnpm run build && wrangler pages deploy . --project-name=course-logs",
+    "deploy:preview": "pnpm run build && wrangler pages deploy . --project-name=course-logs --branch=preview"
+  },
+  "keywords": [
+    "education",
+    "course-planning",
+    "study-plan"
+  ],
+  "author": "Heri Rusmanto",
+  "license": "MIT",
+  "dependencies": {
+    "@alpinejs/collapse": "^3.14.3",
+    "alpinejs": "^3.14.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.14",
+    "esbuild": "^0.24.0",
+    "npm-run-all": "^4.1.5",
+    "tailwindcss": "^4.1.14",
+    "wrangler": "^4.43.0"
+  }
+}

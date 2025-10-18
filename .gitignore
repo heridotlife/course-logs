@@ -1,1 +1,9 @@
 custom_log.log
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/output.css
+dist/app.js
+dist/app.js.map
