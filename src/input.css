@@ -1,0 +1,298 @@
+@import "tailwindcss";
+
+/* Tailwind v4 Configuration */
+@theme {
+  /* Custom breakpoint */
+  --breakpoint-xxs: 360px;
+}
+
+/* Dark mode configuration - required in v4 */
+@variant dark (&:is(.dark *));
+
+/* Custom utility for xxs breakpoint */
+@media (width >= 360px) {
+  .xxs\:flex-row {
+    flex-direction: row;
+  }
+}
+
+/* Safe area insets for notched devices */
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.container {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+
+/* Landscape mode optimizations */
+@media (orientation: landscape) and (max-height: 500px) {
+  .container {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  header {
+    margin-bottom: 1rem;
+  }
+  
+  [x-show="showAddModal"] > div,
+  [x-show="showImportExportModal"] > div,
+  [x-show="showSettingsModal"] > div {
+    max-height: 85vh !important;
+  }
+  
+  .max-h-\[400px\] {
+    max-height: 250px !important;
+  }
+}
+
+/* Landscape tablet optimization */
+@media (orientation: landscape) and (min-width: 768px) and (max-height: 600px) {
+  .grid.grid-cols-1.md\:grid-cols-3 {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) !important;
+  }
+}
+
+/* Accessibility: Focus states */
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print,
+  button,
+  input,
+  select,
+  header,
+  .mobile-menu,
+  [x-show="showAddModal"],
+  [x-show="showImportExportModal"],
+  [x-show="showSettingsModal"],
+  .md\:col-span-1,
+  #available-courses-section {
+    display: none !important;
+  }
+  
+  .md\:sticky {
+    position: static !important;
+  }
+  
+  @page {
+    size: A4 landscape;
+    margin: 1.5cm;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 10pt;
+  }
+  
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .container::before {
+    content: '';
+    display: block;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #333;
+  }
+  
+  .bg-white.rounded-lg.shadow-md.p-6.mb-6 {
+    background: #f8f9fa !important;
+    padding: 1rem !important;
+    margin-bottom: 1.5rem !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 8px !important;
+  }
+  
+  .bg-white.rounded-lg.shadow-md.p-6.mb-6 .grid {
+    display: flex !important;
+    justify-content: space-around !important;
+    gap: 1rem !important;
+  }
+  
+  .bg-white.rounded-lg.shadow-md.p-6.mb-6 .grid > div {
+    flex: 1;
+    min-width: 0;
+    padding: 0.75rem !important;
+    border-radius: 6px !important;
+  }
+  
+  .dark\:bg-gray-800,
+  .dark\:bg-gray-900,
+  .dark\:bg-gray-700 {
+    background: white !important;
+  }
+  
+  .dark\:text-gray-100,
+  .dark\:text-gray-200,
+  .dark\:text-gray-300 {
+    color: #212529 !important;
+  }
+  
+  .dark\:border-gray-700,
+  .dark\:border-gray-600 {
+    border-color: #dee2e6 !important;
+  }
+  
+  * {
+    box-shadow: none !important;
+    transition: none !important;
+  }
+  
+  .md\:col-span-2 > .bg-white {
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  
+  .md\:col-span-2 .grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+    column-gap: 1.5rem !important;
+  }
+  
+  .md\:col-span-2 .grid > div {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    border: 2px solid #dee2e6 !important;
+    border-radius: 8px !important;
+    padding: 0.75rem !important;
+    margin-bottom: 0 !important;
+    background: white !important;
+  }
+  
+  .bg-purple-50 {
+    background: #f3e8ff !important;
+    border-color: #a855f7 !important;
+  }
+  
+  .md\:col-span-2 .grid > div > div > div {
+    background: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 4px !important;
+    padding: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+    font-size: 9pt !important;
+  }
+  
+  .bg-red-500,
+  .bg-red-600 {
+    background: #dc3545 !important;
+    color: white !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+    font-size: 8pt !important;
+  }
+  
+  .bg-green-500,
+  .bg-green-600 {
+    background: #28a745 !important;
+    color: white !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+    font-size: 8pt !important;
+  }
+  
+  .bg-blue-500,
+  .bg-blue-600 {
+    background: #007bff !important;
+    color: white !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+    font-size: 8pt !important;
+  }
+  
+  .bg-yellow-500,
+  .bg-yellow-600 {
+    background: #ffc107 !important;
+    color: #000 !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+    font-size: 8pt !important;
+  }
+  
+  .text-red-600,
+  .text-red-400 {
+    color: #dc3545 !important;
+    font-weight: bold !important;
+  }
+  
+  .text-yellow-600,
+  .text-yellow-400 {
+    color: #ff9800 !important;
+    font-weight: bold !important;
+  }
+  
+  .text-green-700,
+  .text-green-400 {
+    color: #28a745 !important;
+  }
+  
+  [x-show="showValidationSummary"] {
+    display: block !important;
+    background: #e7f3ff !important;
+    border: 1px solid #0066cc !important;
+    padding: 1rem !important;
+    margin-bottom: 1.5rem !important;
+    border-radius: 8px !important;
+    page-break-inside: avoid;
+  }
+  
+  [x-show="showValidationSummary"] ~ * button {
+    display: none !important;
+  }
+  
+  h1, h2 {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  h3 {
+    font-size: 11pt !important;
+    font-weight: bold !important;
+  }
+  
+  .container::after {
+    content: 'Printed: ' attr(data-print-date);
+    display: block;
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+    font-size: 8pt;
+    color: #6c757d;
+  }
+}

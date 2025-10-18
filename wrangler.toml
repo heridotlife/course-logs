@@ -1,0 +1,5 @@
+name = "course-logs"
+compatibility_date = "2025-09-01"
+
+# Pages configuration
+pages_build_output_dir = "."

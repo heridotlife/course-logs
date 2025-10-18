@@ -66,57 +66,191 @@ A modern, responsive web application for planning university course schedules wi
 
 ## Technology Stack
 
-- **Alpine.js 3.x**: Reactive JavaScript framework
-- **Tailwind CSS**: Utility-first CSS framework with dark mode support
+- **Alpine.js 3.15.0**: Reactive JavaScript framework (bundled)
+- **Tailwind CSS 4.1.14**: Utility-first CSS framework with dark mode support (latest v4)
+- **esbuild**: Fast JavaScript bundler
+- **pnpm**: Fast, disk space efficient package manager
 - **localStorage**: Client-side data persistence
 - **FileReader API**: Client-side file imports (CSV/JSON)
 - **Print API**: Native browser print functionality for PDF generation
-- **Vanilla JavaScript**: No build tools required
 
 ## Getting Started
 
 ### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- Local web server (for JSON file loading)
+- Node.js 20+
+- pnpm (recommended) or npm
 
 ### Installation
 
 1. Clone or download this repository
 2. Navigate to the project directory
-3. Start a local web server:
+3. Install dependencies:
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build for development (watch mode)
+pnpm run dev
+
+# Build for production
+pnpm run build
+```
+
+4. Open `index.html` in your browser or use a local server:
 
 ```bash
 # Using Python 3
 python3 -m http.server 8000
 
-# Or using Python 2
-python -m SimpleHTTPServer 8000
-
 # Or using Node.js http-server
 npx http-server -p 8000
 ```
 
-4. Open your browser to `http://localhost:8000/index.html`
+### Build Commands
+
+- `pnpm run build` - Build both CSS and JS for production (minified)
+- `pnpm run dev` - Watch mode for development (CSS + JS)
+- `pnpm run build:css` - Build CSS only
+- `pnpm run watch:css` - Watch CSS only
+- `pnpm run build:js` - Build JS only
+- `pnpm run watch:js` - Watch JS only
 
 ### File Structure
 
 ```
 course-logs/
-├── index.html           # Main application file (single-page app)
+├── src/
+│   ├── app.js          # Alpine.js entry point
+│   └── input.css       # Tailwind CSS source (v4 with @theme config)
+├── dist/
+│   ├── app.js          # Bundled JavaScript (generated)
+│   └── output.css      # Compiled CSS (generated)
 ├── data/
 │   └── courses.json    # Default course data and settings
 ├── locales/
 │   ├── en.json         # English translations
 │   ├── id.json         # Indonesian translations
 │   └── ja.json         # Japanese translations
+├── index.html          # Main application file
+├── package.json        # Dependencies and build scripts
+├── build-js.js         # esbuild configuration
+├── wrangler.toml       # Cloudflare Pages configuration
+├── _headers            # HTTP security headers
+├── _redirects          # URL redirects
+├── .node-version       # Node.js version specification
 ├── README.md           # This file
-├── DEPLOY.md           # Cloudflare Pages deployment guide
 └── LICENSE             # MIT License
 ```
 
 ## Deployment
 
-For deploying to production (Cloudflare Pages), see the [Deployment Guide](DEPLOY.md).
+### Cloudflare Pages (Recommended)
+
+This project is optimized for deployment on Cloudflare Pages with automatic builds.
+
+#### Automatic Deployment
+
+1. **Connect Repository**:
+   - Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
+   - Navigate to Pages
+   - Click "Create a project" → "Connect to Git"
+   - Select your repository
+
+2. **Configure Build Settings**:
+   - **Framework preset**: None
+   - **Build command**: `pnpm run build`
+   - **Build output directory**: `.` (root directory)
+   - **Node version**: 20 (automatically detected from `.node-version`)
+
+3. **Deploy**: Click "Save and Deploy"
+
+#### Manual Deployment with Wrangler
+
+```bash
+# Install Wrangler CLI globally (if not already installed)
+npm install -g wrangler
+
+# Login to Cloudflare
+wrangler login
+
+# Build the project
+pnpm run build
+
+# Deploy to Cloudflare Pages
+wrangler pages deploy . --project-name=course-logs
+```
+
+#### Environment Variables (Optional)
+
+If you need to configure environment-specific settings, you can add them in Cloudflare Pages dashboard under Settings → Environment variables.
+
+### Configuration Files
+
+- **`wrangler.toml`**: Cloudflare Pages configuration (build commands, Node version)
+- **`_headers`**: HTTP security headers and caching rules
+  - Security headers (X-Frame-Options, CSP, etc.)
+  - Cache-Control for static assets (1 year)
+  - Cache-Control for HTML (1 hour with revalidation)
+- **`_redirects`**: URL redirects and rewrites (404 handling)
+- **`.node-version`**: Specifies Node.js 20 for build environment
+
+### Other Deployment Options
+
+#### GitHub Pages
+
+```bash
+# Build the project
+pnpm run build
+
+# Deploy dist/ folder to gh-pages branch
+# (requires gh-pages package or manual git commands)
+```
+
+#### Netlify
+
+1. Connect your repository
+2. Set build command: `pnpm run build`
+3. Set publish directory: `.`
+4. Deploy
+
+#### Vercel
+
+1. Connect your repository
+2. Set build command: `pnpm run build`
+3. Set output directory: `.`
+4. Deploy
+
+## Development Workflow
+
+### Local Development
+
+```bash
+# Start development with hot reload
+pnpm run dev
+
+# In another terminal, start a local server
+python3 -m http.server 8000
+
+# Open http://localhost:8000
+```
+
+### Production Build
+
+```bash
+# Build minified assets
+pnpm run build
+
+# Test the production build locally
+python3 -m http.server 8000
+```
+
+### Code Quality
+
+The project uses:
+- **Tailwind CSS v4** with CSS-based configuration for minimal bundle size (5x faster builds)
+- **esbuild** for fast JavaScript bundling
+- **Native CSS features** for cross-browser compatibility (built into Tailwind v4)
 
 ## Usage
 
