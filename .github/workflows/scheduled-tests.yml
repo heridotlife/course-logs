@@ -1,0 +1,144 @@
+name: Scheduled Tests
+
+on:
+  schedule:
+    # Run every day at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  full-test-suite:
+    timeout-minutes: 90
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # Run all device profiles in scheduled tests
+        project: [chromium-desktop, chromium-mobile, chromium-tablet]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Build project
+        run: pnpm run build
+
+      - name: Run full test suite (${{ matrix.project }})
+        run: pnpm exec playwright test --project=${{ matrix.project }}
+        env:
+          CI: true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scheduled-test-results-${{ matrix.project }}
+          path: test-results/
+          retention-days: 7
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scheduled-test-report-${{ matrix.project }}
+          path: playwright-report/
+          retention-days: 7
+
+  notify-on-failure:
+    runs-on: ubuntu-latest
+    needs: [full-test-suite]
+    if: failure()
+
+    steps:
+      - name: Create issue on test failure
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🔴 Scheduled Test Failure - ' + new Date().toISOString().split('T')[0];
+            const body = '## Scheduled Test Suite Failed\n\n' +
+              '**Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n' +
+              '**Branch:** ${{ github.ref_name }}\n' +
+              '**Commit:** ${{ github.sha }}\n\n' +
+              'The nightly test suite has detected failures. Please investigate and fix the issues.\n\n' +
+              '### Next Steps:\n' +
+              '1. Review the test artifacts\n' +
+              '2. Identify failing tests\n' +
+              '3. Fix the issues\n' +
+              '4. Re-run the workflow to verify fixes';
+
+            // Check if similar issue exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'automated-test-failure'
+            });
+
+            const existingIssue = issues.data.find(issue => 
+              issue.title.includes('Scheduled Test Failure')
+            );
+
+            if (existingIssue) {
+              // Add comment to existing issue
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: 'Another failure detected:\n\n' + body
+              });
+            } else {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['automated-test-failure', 'bug', 'priority']
+              });
+            }
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: [full-test-suite]
+    if: always()
+
+    steps:
+      - name: Test Summary
+        run: |
+          echo "## 📊 Scheduled Test Summary"
+          echo ""
+          if [ "${{ needs.full-test-suite.result }}" == "success" ]; then
+            echo "✅ All scheduled tests passed"
+          else
+            echo "❌ Some scheduled tests failed"
+            echo "📝 Issue created for investigation"
+          fi
