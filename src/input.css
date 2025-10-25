@@ -68,6 +68,71 @@ body {
   display: none !important;
 }
 
+/* Performance: Prevent layout shift during page load */
+.container {
+  min-height: 100vh;
+  contain: layout style;
+}
+
+/* Performance: Optimize scrollable areas to prevent reflows */
+.space-y-3.max-h-\[calc\(100vh-12rem\)\] {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 300px;
+}
+
+/* Performance: Optimize modals positioning - prevent body scroll shift */
+/* Only prevent scroll when modals are open, not for other x-show elements */
+body:has([x-show="showAddModal"]:not([style*="display: none"])),
+body:has([x-show="showImportExportModal"]:not([style*="display: none"])),
+body:has([x-show="showSettingsModal"]:not([style*="display: none"])) {
+  overflow: hidden;
+  padding-right: 0;
+}
+
+/* Modal performance - GPU acceleration */
+[x-show][class*="fixed"] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: opacity;
+}
+
+/* Performance: Will-change for animated/transition elements */
+[x-show],
+[x-collapse] {
+  will-change: opacity, height;
+}
+
+/* Remove will-change after transition to free up resources */
+[x-show]:not([style*="display: none"]),
+[x-collapse]:not([style*="height: 0"]) {
+  will-change: auto;
+}
+
+/* Performance: GPU acceleration for smooth transitions */
+.transition-colors,
+.transition-all {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Prevent font loading causing layout shift */
+body {
+  font-display: swap;
+}
+
+/* Reserve space for dynamic badges and labels */
+.bg-blue-100,
+.bg-red-500,
+.bg-green-500,
+.bg-yellow-500 {
+  min-width: max-content;
+}
+
+/* Performance: Optimize grid reflows */
+.grid {
+  content-visibility: auto;
+}
+
 /* Accessibility: Focus states */
 button:focus-visible,
 select:focus-visible,

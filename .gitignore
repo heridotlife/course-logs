@@ -7,3 +7,15 @@ node_modules/
 dist/output.css
 dist/app.js
 dist/app.js.map
+test-results/*
+playwright-report/*
+
+# Environment and secrets
+.env
+.env.local
+.env*.local
+*.pem
+*.key
+
+# Claude Code MCP local overrides (keep mcp.json, ignore personal configs)
+.claude/mcp.local.json

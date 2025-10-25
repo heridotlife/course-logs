@@ -5,6 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Rencana Studi Sibermu</title>
     
+    <!-- Performance: Critical CSS inline to prevent render blocking -->
+    <style>
+        /* Critical CSS for initial render - prevents CLS */
+        [x-cloak] { display: none !important; }
+        body { min-height: 100vh; font-size: 16px; line-height: 1.5; }
+        .container { min-height: 100vh; }
+        
+        /* Prevent font loading CLS */
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        
+        /* Reserve space for statistics cards to prevent CLS */
+        .stats-card { min-height: 120px; contain: layout style paint; }
+        .stat-value { min-height: 2rem; }
+        
+        /* Prevent color transition CLS */
+        .bg-white, .dark\:bg-gray-800 { will-change: background-color; }
+        .transition-colors { transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; }
+        
+        /* Skeleton loader */
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s ease-in-out infinite; }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        
+        /* Prevent layout shifts during Alpine.js init */
+        [x-text]:empty::before { content: '\200b'; display: inline-block; }
+    </style>
+    
     <!-- Performance: Preload critical assets -->
     <link rel="preload" href="./dist/output.css" as="style">
     <link rel="preload" href="./dist/app.js" as="script">
@@ -23,27 +49,30 @@
     <link rel="apple-touch-icon" href="https://heri.life/favicon/apple-touch-icon.png" />
     <link rel="manifest" href="https://heri.life/favicon/site.webmanifest" />
     <link rel="stylesheet" href="./dist/output.css">
+    <!-- Performance: Use defer for better loading performance -->
     <script defer src="./dist/app.js"></script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors duration-200">
-    <div class="container mx-auto px-4 py-8" x-data="courseApp()" x-init="init()">
+    <!-- Reserve min-height for container to prevent CLS -->
+    <div class="container mx-auto px-4 py-8 min-h-screen" x-data="courseApp()" x-init="init()">
         <!-- Header -->
         <header class="mb-6 no-print" x-data="{ mobileMenuOpen: false }">
             <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
                 <!-- Title Section -->
                 <div class="flex justify-between items-start lg:block">
                     <div class="flex-1">
-                        <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2" x-text="t('title')"></h1>
-                        <p class="text-sm md:text-base lg:text-lg text-gray-600 dark:text-gray-400" x-text="t('subtitle')"></p>
+                        <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2" x-text="t('title')">Sibermu Study Plan</h1>
+                        <p class="text-sm md:text-base lg:text-lg text-gray-600 dark:text-gray-400" x-text="t('subtitle')">Plan your academic semester efficiently</p>
                         <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-500 mt-1">
-                            <span class="font-medium" x-text="t('last_saved')"></span>
-                            <span x-text="getLastSavedText()"></span>
+                            <span class="font-medium" x-text="t('last_saved')">Last saved:</span>
+                            <span x-text="getLastSavedText()">Loading...</span>
                         </p>
                     </div>
                     
                     <!-- Mobile Menu Toggle Button -->
                     <button @click="mobileMenuOpen = !mobileMenuOpen" 
                             class="lg:hidden bg-gray-700 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-gray-500 text-white p-3 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
+                            data-testid="mobile-menu-btn"
                             :aria-label="mobileMenuOpen ? 'Close menu' : 'Open menu'"
                             :aria-expanded="mobileMenuOpen">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -60,6 +89,7 @@
                         <div x-data="{ open: false }" class="relative">
                             <button @click="open = !open" 
                                     class="bg-gray-700 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-gray-500 text-white text-sm px-4 py-2 rounded flex items-center gap-2 min-h-[44px]"
+                                    data-testid="desktop-lang-btn"
                                     aria-label="Change language"
                                     :aria-expanded="open">
                                 <span x-text="language.toUpperCase()"></span>
@@ -73,6 +103,7 @@
                         </div>
                         <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
                                 class="bg-gray-700 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-gray-500 text-white text-sm px-4 py-2 rounded flex items-center gap-2 min-h-[44px]"
+                                data-testid="desktop-theme-btn"
                                 :aria-label="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
                             <span x-show="!darkMode" aria-hidden="true">🌙</span>
                             <span x-show="darkMode" aria-hidden="true">☀️</span>
@@ -80,6 +111,7 @@
                         </button>
                         <button @click="saveToLocalStorage(); $el.innerText=t('saved'); setTimeout(() => $el.innerText=t('save_progress'), 1000)"
                                 class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('save_progress')"
+                                data-testid="save-btn"
                                 aria-label="Save progress">
                         </button>
                         <button @click="showSettingsModal = true"
@@ -107,6 +139,7 @@
                         <div x-data="{ open: false }" class="relative col-span-2">
                             <button @click="open = !open" 
                                     class="w-full bg-gray-700 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-gray-500 text-white text-sm px-4 py-2 rounded flex items-center justify-center gap-2 min-h-[44px]"
+                                    data-testid="mobile-lang-btn"
                                     aria-label="Change language"
                                     :aria-expanded="open">
                                 <span x-text="language.toUpperCase()"></span>
@@ -120,13 +153,15 @@
                         </div>
                         <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
                                 class="bg-gray-700 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-gray-500 text-white text-sm px-4 py-2 rounded flex items-center justify-center gap-2 col-span-2 min-h-[44px]"
+                                data-testid="mobile-theme-btn"
                                 :aria-label="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
                             <span x-show="!darkMode" aria-hidden="true">🌙</span>
                             <span x-show="darkMode" aria-hidden="true">☀️</span>
                             <span x-text="darkMode ? t('light_mode') : t('dark_mode')"></span>
                         </button>
                         <button @click="saveToLocalStorage(); $el.innerText=t('saved'); setTimeout(() => $el.innerText=t('save_progress'), 1000); mobileMenuOpen = false"
-                                class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded col-span-2 min-h-[44px]" x-text="t('save_progress')">
+                                class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded col-span-2 min-h-[44px]" x-text="t('save_progress')"
+                                data-testid="mobile-save-btn">>
                         </button>
                         <button @click="showSettingsModal = true; mobileMenuOpen = false"
                                 class="bg-purple-500 hover:bg-purple-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('settings')">
@@ -156,34 +191,34 @@
                accept=".json"
                class="hidden">
 
-        <!-- Statistics Dashboard -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-200">
-            <h2 class="text-lg md:text-xl lg:text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100" x-text="t('statistics')"></h2>
+        <!-- Statistics Dashboard - Fix CLS: Add min-height -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-200 min-h-[180px]">
+            <h2 class="text-lg md:text-xl lg:text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100" x-text="t('statistics')">Statistics</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 transition-colors duration-200">
-                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('total_credits_taken')"></p>
-                    <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400" x-text="totalCreditsTaken + ' ' + t('sks')"></p>
+                <div class="stats-card bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 transition-colors duration-200">
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('total_credits_taken')">Total Credits Taken</p>
+                    <p class="stat-value text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400" x-text="totalCreditsTaken + ' ' + t('sks')">0 SKS</p>
                 </div>
-                <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 transition-colors duration-200">
-                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('target_credits')"></p>
-                    <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400" x-text="settings.targetCredits + ' ' + t('sks')"></p>
+                <div class="stats-card bg-green-50 dark:bg-green-900/30 rounded-lg p-4 transition-colors duration-200">
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('target_credits')">Target Credits</p>
+                    <p class="stat-value text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400" x-text="settings.targetCredits + ' ' + t('sks')">145 SKS</p>
                 </div>
-                <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4 transition-colors duration-200">
-                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('progress')"></p>
-                    <p class="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400" x-text="progressPercentage + '%'"></p>
+                <div class="stats-card bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4 transition-colors duration-200">
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('progress')">Progress</p>
+                    <p class="stat-value text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400" x-text="progressPercentage + '%'">0%</p>
                 </div>
-                <div class="bg-orange-50 dark:bg-orange-900/30 rounded-lg p-4 transition-colors duration-200">
-                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('unassigned_courses')"></p>
-                    <p class="text-xl sm:text-2xl font-bold text-orange-600 dark:text-orange-400" x-text="unassignedCourses.length"></p>
+                <div class="stats-card bg-orange-50 dark:bg-orange-900/30 rounded-lg p-4 transition-colors duration-200">
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('unassigned_courses')">Unassigned Courses</p>
+                    <p class="stat-value text-xl sm:text-2xl font-bold text-orange-600 dark:text-orange-400" x-text="unassignedCourses.length">68</p>
                 </div>
             </div>
         </div>
 
         <!-- Main Layout: Two columns -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Left Panel: Lecture Pool -->
+            <!-- Left Panel: Lecture Pool - Fix CLS: Add min-height -->
             <div class="md:col-span-1" id="available-courses-section">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200 md:sticky md:top-4 md:self-start">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200 md:sticky md:top-4 md:self-start min-h-[500px]">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100" x-text="t('available_courses')"></h2>
                         <button @click="openAddModal()" 
@@ -205,8 +240,8 @@
                         </button>
                     </div>
 
-                    <!-- Course List -->
-                    <div class="space-y-3 max-h-[calc(100vh-12rem)] overflow-y-auto">
+                    <!-- Course List - Fix CLS: Add min-height to prevent layout shift -->
+                    <div class="space-y-3 max-h-[calc(100vh-12rem)] overflow-y-auto min-h-[300px]">
                         <template x-for="course in unassignedCourses" :key="course.id">
                             <div class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 rounded-lg p-4 hover:shadow-md transition-all duration-200">
                                 <div class="flex justify-between items-start mb-2">
@@ -246,9 +281,9 @@
                 </div>
             </div>
 
-            <!-- Right Panel: Semester Grid -->
+            <!-- Right Panel: Semester Grid - Fix CLS: Add min-height -->
             <div class="md:col-span-2">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200 min-h-[600px]">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100" x-text="t('semester_plan')"></h2>
                         <button @click="showValidationSummary = !showValidationSummary"
@@ -447,7 +482,7 @@
                                     class="col-span-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm" x-text="t('export_as_pdf')">
                             </button>
                         </div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2" x-html="t('download_your_plan')">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2" x-text="t('download_your_plan')">
                         </p>
                     </div>
 
@@ -463,8 +498,8 @@
                             </button>
                         </div>
                         <div class="mt-2 space-y-2">
-                            <p class="text-xs text-gray-500 dark:text-gray-400" x-html="t('import_json_format')"></p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400" x-html="t('import_csv_format')"></p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400" x-text="t('import_json_format')"></p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400" x-text="t('import_csv_format')"></p>
                         </div>
                     </div>
 

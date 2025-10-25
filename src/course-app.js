@@ -93,11 +93,152 @@ export function courseApp() {
         async loadTranslations() {
             try {
                 const response = await fetch(`./locales/${this.language}.json`);
+
+                // ✅ FIX: Handle 503 errors from Cloudflare Pages
+                if (!response.ok) {
+                    console.warn(`Failed to load ${this.language}.json (${response.status}), using fallback`);
+                    this.translations = this.getDefaultTranslations(this.language);
+                    document.documentElement.lang = this.language;
+                    return;
+                }
+
                 this.translations = await response.json();
                 document.documentElement.lang = this.language;
             } catch (error) {
                 console.error('Error loading translations:', error);
+                // ✅ FIX: Fallback to prevent CLS from translation failures
+                this.translations = this.getDefaultTranslations(this.language);
+                document.documentElement.lang = this.language;
             }
+        },
+
+        getDefaultTranslations(language) {
+            // ✅ FIX: Inline critical translations to prevent CLS on 503 errors
+            // These are the minimum strings needed to render the UI without layout shifts
+            const defaults = {
+                en: {
+                    // Header & Navigation
+                    'app_title': 'Course Study Plan',
+                    'available_courses': 'Available Courses',
+                    'semester_plan': 'Semester Plan',
+                    'statistics': 'Statistics',
+
+                    // Actions
+                    'add_course': 'Add Course',
+                    'auto_map': 'Auto Map',
+                    'settings': 'Settings',
+                    'import_export': 'Import/Export',
+                    'save': 'Save',
+                    'cancel': 'Cancel',
+                    'edit': 'Edit',
+                    'delete': 'Delete',
+                    'clear_all': 'Clear All',
+
+                    // Course Fields
+                    'course_code': 'Code',
+                    'course_name': 'Name',
+                    'credits': 'Credits',
+                    'type': 'Type',
+                    'lecturer': 'Lecturer',
+                    'semester': 'Semester',
+                    'recommended_semester': 'Recommended Semester',
+
+                    // Stats
+                    'total_credits': 'Total Credits',
+                    'unassigned_courses': 'Unassigned Courses',
+                    'target_credits': 'Target Credits',
+
+                    // Validation
+                    'validation_passed': 'Validation Passed',
+                    'validation_failed': 'Validation Failed',
+
+                    // Misc
+                    'loading': 'Loading...',
+                    'no_courses': 'No courses available',
+                },
+                id: {
+                    // Header & Navigation
+                    'app_title': 'Rencana Studi',
+                    'available_courses': 'Mata Kuliah Tersedia',
+                    'semester_plan': 'Rencana Semester',
+                    'statistics': 'Statistik',
+
+                    // Actions
+                    'add_course': 'Tambah Mata Kuliah',
+                    'auto_map': 'Pemetaan Otomatis',
+                    'settings': 'Pengaturan',
+                    'import_export': 'Impor/Ekspor',
+                    'save': 'Simpan',
+                    'cancel': 'Batal',
+                    'edit': 'Ubah',
+                    'delete': 'Hapus',
+                    'clear_all': 'Hapus Semua',
+
+                    // Course Fields
+                    'course_code': 'Kode',
+                    'course_name': 'Nama',
+                    'credits': 'SKS',
+                    'type': 'Tipe',
+                    'lecturer': 'Dosen',
+                    'semester': 'Semester',
+                    'recommended_semester': 'Semester Direkomendasikan',
+
+                    // Stats
+                    'total_credits': 'Total SKS',
+                    'unassigned_courses': 'Mata Kuliah Belum Ditugaskan',
+                    'target_credits': 'Target SKS',
+
+                    // Validation
+                    'validation_passed': 'Validasi Berhasil',
+                    'validation_failed': 'Validasi Gagal',
+
+                    // Misc
+                    'loading': 'Memuat...',
+                    'no_courses': 'Tidak ada mata kuliah',
+                },
+                ja: {
+                    // Header & Navigation
+                    'app_title': '履修計画',
+                    'available_courses': '利用可能な科目',
+                    'semester_plan': 'セメスター計画',
+                    'statistics': '統計',
+
+                    // Actions
+                    'add_course': '科目追加',
+                    'auto_map': '自動割当',
+                    'settings': '設定',
+                    'import_export': 'インポート/エクスポート',
+                    'save': '保存',
+                    'cancel': 'キャンセル',
+                    'edit': '編集',
+                    'delete': '削除',
+                    'clear_all': 'すべてクリア',
+
+                    // Course Fields
+                    'course_code': 'コード',
+                    'course_name': '科目名',
+                    'credits': '単位',
+                    'type': 'タイプ',
+                    'lecturer': '講師',
+                    'semester': 'セメスター',
+                    'recommended_semester': '推奨セメスター',
+
+                    // Stats
+                    'total_credits': '総単位数',
+                    'unassigned_courses': '未割当科目',
+                    'target_credits': '目標単位数',
+
+                    // Validation
+                    'validation_passed': '検証成功',
+                    'validation_failed': '検証失敗',
+
+                    // Misc
+                    'loading': '読み込み中...',
+                    'no_courses': '科目がありません',
+                }
+            };
+
+            return defaults[language] || defaults.en;
         },
 
         changeLanguage(lang) {
