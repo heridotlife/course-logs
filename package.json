@@ -30,8 +30,8 @@
   "author": "Heri Rusmanto",
   "license": "MIT",
   "dependencies": {
-    "@alpinejs/collapse": "^3.15.0",
-    "alpinejs": "^3.15.0",
+    "@alpinejs/collapse": "^3.15.1",
+    "alpinejs": "^3.15.1",
     "http-server": "^14.1.1"
   },
   "devDependencies": {
