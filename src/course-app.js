@@ -42,8 +42,15 @@ export function courseApp() {
 
         async init() {
             await this.loadTranslations();
-            await this.loadData();
-            this.loadFromLocalStorage();
+
+            // Check localStorage first
+            const hasLocalStorage = this.loadFromLocalStorage();
+
+            // Only load defaults if localStorage is empty
+            if (!hasLocalStorage) {
+                await this.loadData();
+            }
+
             this.generateSemesterList();
         },
 
@@ -288,8 +295,6 @@ export function courseApp() {
                     const data = JSON.parse(saved);
                     if (data.settings) {
                         this.settings = data.settings;
-                        // Regenerate semester list based on loaded settings
-                        this.generateSemesterList();
                     }
                     if (data.courses) {
                         this.courses = data.courses;
@@ -297,9 +302,14 @@ export function courseApp() {
                     if (data.lastSaved) {
                         this.lastSaved = data.lastSaved;
                     }
+                    // Invalidate cache to reflect loaded course assignments
+                    this.invalidateCache();
+                    return true; // Data was loaded from localStorage
                 }
+                return false; // No data in localStorage
             } catch (error) {
                 console.error('Error loading from localStorage:', error);
+                return false;
             }
         },
 
