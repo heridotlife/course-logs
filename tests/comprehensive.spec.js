@@ -1019,11 +1019,11 @@ test.describe('Course-Logs - Comprehensive Test Suite', () => {
   // Run locally with: pnpm exec playwright test --update-snapshots
   // Then commit the generated snapshots to pass in CI
 
-  test.describe('Visual Regression', () => {
-    // Skip visual regression tests in CI if snapshots don't exist
-    test.skip(!!process.env.CI, 'Skipping visual regression in CI until snapshots are committed');
-    
+  // Conditionally skip Visual Regression tests in CI (snapshots not committed yet)
+  (process.env.CI ? test.describe.skip : test.describe)('Visual Regression', () => {
+
     test('should match desktop layout snapshot', async ({ page }) => {
+
       await page.setViewportSize({ width: 1920, height: 1080 });
       await page.waitForLoadState('networkidle');
       
@@ -1036,7 +1036,7 @@ test.describe('Course-Logs - Comprehensive Test Suite', () => {
     test('should match mobile layout snapshot', async ({ page }) => {
       await page.setViewportSize({ width: 393, height: 851 });
       await page.waitForLoadState('networkidle');
-      
+
       await expect(page).toHaveScreenshot('mobile-layout.png', {
         maxDiffPixels: 100,
       });
@@ -1044,12 +1044,12 @@ test.describe('Course-Logs - Comprehensive Test Suite', () => {
 
     test('should match dark mode snapshot', async ({ page }) => {
       await page.setViewportSize({ width: 1920, height: 1080 });
-      
+
       const testId = await getResponsiveButtonTestId(page, 'theme');
       const darkModeBtn = page.getByTestId(testId);
       await darkModeBtn.click();
       await page.waitForTimeout(500);
-      
+
       await expect(page).toHaveScreenshot('dark-mode-layout.png', {
         maxDiffPixels: 100,
       });
