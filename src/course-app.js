@@ -40,6 +40,76 @@ export function courseApp() {
         _lastCoursesUpdate: 0,
         _lastTotalUpdate: 0,
 
+        // Focus trap for modal accessibility
+        focusTrap: {
+            lastFocusedElement: null,
+            focusableSelectors: 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+
+            activate(modalElement) {
+                this.lastFocusedElement = document.activeElement;
+                const focusableElements = modalElement.querySelectorAll(this.focusableSelectors);
+                if (focusableElements.length > 0) {
+                    focusableElements[0].focus();
+                }
+
+                // Remove any existing listener before adding new one
+                modalElement.removeEventListener('keydown', this._handleKeyDownBound);
+                this._handleKeyDownBound = (e) => this.handleKeyDown(e, modalElement);
+                modalElement.addEventListener('keydown', this._handleKeyDownBound);
+            },
+
+            deactivate(modalElement) {
+                if (modalElement && this._handleKeyDownBound) {
+                    modalElement.removeEventListener('keydown', this._handleKeyDownBound);
+                }
+                if (this.lastFocusedElement) {
+                    this.lastFocusedElement.focus();
+                }
+            },
+
+            handleKeyDown(e, modalElement) {
+                if (e.key === 'Tab') {
+                    const focusableElements = Array.from(modalElement.querySelectorAll(this.focusableSelectors));
+                    const firstElement = focusableElements[0];
+                    const lastElement = focusableElements[focusableElements.length - 1];
+
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstElement) {
+                            e.preventDefault();
+                            lastElement.focus();
+                        }
+                    } else {
+                        if (document.activeElement === lastElement) {
+                            e.preventDefault();
+                            firstElement.focus();
+                        }
+                    }
+                }
+            }
+        },
+
+        // Screen reader announcements
+        announceStatus(message) {
+            const statusElement = document.getElementById('status-announcements');
+            if (statusElement) {
+                statusElement.textContent = message;
+                // Clear after announcement (screen readers will have read it)
+                setTimeout(() => {
+                    statusElement.textContent = '';
+                }, 3000);
+            }
+        },
+
+        announceError(message) {
+            const errorElement = document.getElementById('error-announcements');
+            if (errorElement) {
+                errorElement.textContent = message;
+                setTimeout(() => {
+                    errorElement.textContent = '';
+                }, 5000);
+            }
+        },
+
         async init() {
             await this.loadTranslations();
 
@@ -48,10 +118,57 @@ export function courseApp() {
 
             // Only load defaults if localStorage is empty
             if (!hasLocalStorage) {
+                this.announceStatus(this.t('loading_courses'));
                 await this.loadData();
+                this.announceStatus(this.t('courses_loaded'));
+            } else {
+                this.announceStatus(this.t('courses_loaded'));
             }
 
             this.generateSemesterList();
+
+            // Watch for modal changes to manage focus trapping
+            this.$watch('showAddModal', (isOpen) => {
+                if (isOpen) {
+                    this.$nextTick(() => {
+                        const modal = document.querySelector('[x-show="showAddModal"] > div');
+                        if (modal) {
+                            this.focusTrap.activate(modal);
+                        }
+                    });
+                } else {
+                    const modal = document.querySelector('[x-show="showAddModal"] > div');
+                    this.focusTrap.deactivate(modal);
+                }
+            });
+
+            this.$watch('showImportExportModal', (isOpen) => {
+                if (isOpen) {
+                    this.$nextTick(() => {
+                        const modal = document.querySelector('[x-show="showImportExportModal"] > div');
+                        if (modal) {
+                            this.focusTrap.activate(modal);
+                        }
+                    });
+                } else {
+                    const modal = document.querySelector('[x-show="showImportExportModal"] > div');
+                    this.focusTrap.deactivate(modal);
+                }
+            });
+
+            this.$watch('showSettingsModal', (isOpen) => {
+                if (isOpen) {
+                    this.$nextTick(() => {
+                        const modal = document.querySelector('[x-show="showSettingsModal"] > div');
+                        if (modal) {
+                            this.focusTrap.activate(modal);
+                        }
+                    });
+                } else {
+                    const modal = document.querySelector('[x-show="showSettingsModal"] > div');
+                    this.focusTrap.deactivate(modal);
+                }
+            });
         },
 
         generateSemesterList() {
@@ -283,8 +400,10 @@ export function courseApp() {
                 };
                 localStorage.setItem('lectureStudyPlan', JSON.stringify(dataToSave));
                 this.lastSaved = now;
+                this.announceStatus(this.t('data_saved'));
             } catch (error) {
                 console.error('Error saving to localStorage:', error);
+                this.announceError(this.t('error_import_failed'));
             }
         },
 
@@ -396,6 +515,8 @@ export function courseApp() {
             const file = event.target.files[0];
             if (!file) return;
 
+            this.announceStatus(this.t('loading'));
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
@@ -427,10 +548,12 @@ export function courseApp() {
                         this.invalidateCache();
                         this.saveToLocalStorage();
                         this.showImportExportModal = false;
+                        this.announceStatus(this.t('import_successful'));
                         alert(this.t('import_successful'));
                     }
                 } catch (error) {
                     console.error('Error parsing CSV:', error);
+                    this.announceError(this.t('import_error'));
                     alert(this.t('import_error'));
                 }
                 event.target.value = '';
@@ -442,11 +565,13 @@ export function courseApp() {
             const file = event.target.files[0];
             if (!file) return;
 
+            this.announceStatus(this.t('loading'));
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    
+
                     // Validate the JSON structure
                     if (!data.courses || !Array.isArray(data.courses)) {
                         throw new Error('Invalid JSON format: missing courses array');
@@ -454,11 +579,11 @@ export function courseApp() {
 
                     const courseCount = data.courses.length;
                     const confirmMessage = `Import ${courseCount} courses from JSON backup?${data.settings ? '\n\nThis will also import settings including semester configuration and credit limits.' : ''}`;
-                    
+
                     if (confirm(confirmMessage)) {
                         // Import courses
                         this.courses = data.courses;
-                        
+
                         // Import settings if available
                         if (data.settings) {
                             this.settings = {
@@ -472,14 +597,16 @@ export function courseApp() {
                             // Regenerate semester list based on imported settings
                             this.generateSemesterList();
                         }
-                        
+
                         this.invalidateCache();
                         this.saveToLocalStorage();
                         this.showImportExportModal = false;
+                        this.announceStatus(this.t('import_successful'));
                         alert(this.t('import_successful'));
                     }
                 } catch (error) {
                     console.error('Error parsing JSON:', error);
+                    this.announceError(this.t('import_error'));
                     alert(`${this.t('import_error')}\n\nError: ${error.message}`);
                 }
                 event.target.value = '';
@@ -545,6 +672,18 @@ export function courseApp() {
         },
 
         saveCourse() {
+            // Validate required fields
+            if (!this.newCourse.code || !this.newCourse.name) {
+                this.announceError(this.t('error_required_fields'));
+                return;
+            }
+
+            // Validate credits range
+            if (this.newCourse.credits < 1 || this.newCourse.credits > 8) {
+                this.announceError(this.t('error_credits_range'));
+                return;
+            }
+
             if (this.editingCourse) {
                 // Update existing course
                 const index = this.courses.findIndex(c => c.id === this.editingCourse.id);
@@ -557,6 +696,7 @@ export function courseApp() {
                 this.courses.push({ ...this.newCourse });
             }
             this.invalidateCache();
+            this.announceStatus(this.t('course_saved'));
             this.closeModal();
             this.saveToLocalStorage();
         },
@@ -567,6 +707,7 @@ export function courseApp() {
                 if (index !== -1) {
                     this.courses.splice(index, 1);
                     this.invalidateCache();
+                    this.announceStatus(this.t('course_deleted'));
                     this.saveToLocalStorage();
                 }
             }
@@ -605,27 +746,33 @@ export function courseApp() {
         },
 
         autoMapCourses() {
+            this.announceStatus(this.t('auto_mapping_courses'));
+
             let mappedCount = 0;
             const unassigned = this.courses.filter(c => !c.assignedSemester);
-            
+
             unassigned.forEach(course => {
                 // Skip if no recommended semester
                 if (!course.recommendedSemester) return;
-                
+
                 // Map to recommended semester if it exists in semesterList
                 const recommendedSemester = String(course.recommendedSemester);
                 const semesterExists = this.semesterList.find(s => s.id === recommendedSemester);
-                
+
                 if (semesterExists) {
                     course.assignedSemester = recommendedSemester;
                     mappedCount++;
                 }
             });
-            
+
             if (mappedCount > 0) {
                 this.invalidateCache();
                 this.saveToLocalStorage();
-                alert(`✓ ${mappedCount} ${this.t('courses_auto_mapped')}`);
+                const message = `${mappedCount} ${this.t('courses_auto_mapped')}`;
+                this.announceStatus(message);
+                alert(`✓ ${message}`);
+            } else {
+                this.announceStatus(this.t('operation_complete'));
             }
         },
 

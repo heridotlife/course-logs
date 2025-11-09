@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ darkMode: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true'" :class="{ 'dark': darkMode }">
+<html x-data="{ darkMode: false, language: 'en' }" x-init="darkMode = localStorage.getItem('darkMode') === 'true'; language = localStorage.getItem('language') || 'en'" :class="{ 'dark': darkMode }" :lang="language">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -52,7 +52,10 @@
     <!-- Performance: Use defer for better loading performance -->
     <script defer src="./dist/app.js"></script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors duration-200">
+<body class="min-h-screen transition-colors duration-200">
+    <!-- Skip link for keyboard navigation (WCAG 2.1 AA) -->
+    <a href="#main-content" class="skip-link" x-text="t('skip_to_main_content') || 'Skip to main content'">Skip to main content</a>
+
     <!-- Reserve min-height for container to prevent CLS -->
     <div class="container mx-auto px-4 py-8 min-h-screen" x-data="courseApp()" x-init="init()">
         <!-- Header -->
@@ -191,23 +194,25 @@
                accept=".json"
                class="hidden">
 
+        <!-- Main content area (WCAG 2.1 Landmark) -->
+        <main id="main-content" aria-label="Study planner main content">
         <!-- Statistics Dashboard - Fix CLS: Add min-height -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-200 min-h-[180px]">
-            <h2 class="text-lg md:text-xl lg:text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100" x-text="t('statistics')">Statistics</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-200 min-h-[180px]" role="region" aria-labelledby="statistics-heading">
+            <h2 id="statistics-heading" class="text-lg md:text-xl lg:text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100" x-text="t('statistics')">Statistics</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="stats-card bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 transition-colors duration-200">
+                <div class="stats-card liquid-glass-stat rounded-lg p-4 text-center">
                     <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('total_credits_taken')">Total Credits Taken</p>
                     <p class="stat-value text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400" x-text="totalCreditsTaken + ' ' + t('sks')">0 SKS</p>
                 </div>
-                <div class="stats-card bg-green-50 dark:bg-green-900/30 rounded-lg p-4 transition-colors duration-200">
+                <div class="stats-card liquid-glass-stat rounded-lg p-4 text-center">
                     <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('target_credits')">Target Credits</p>
                     <p class="stat-value text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400" x-text="settings.targetCredits + ' ' + t('sks')">145 SKS</p>
                 </div>
-                <div class="stats-card bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4 transition-colors duration-200">
+                <div class="stats-card liquid-glass-stat rounded-lg p-4 text-center">
                     <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('progress')">Progress</p>
                     <p class="stat-value text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400" x-text="progressPercentage + '%'">0%</p>
                 </div>
-                <div class="stats-card bg-orange-50 dark:bg-orange-900/30 rounded-lg p-4 transition-colors duration-200">
+                <div class="stats-card liquid-glass-stat rounded-lg p-4 text-center">
                     <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" x-text="t('unassigned_courses')">Unassigned Courses</p>
                     <p class="stat-value text-xl sm:text-2xl font-bold text-orange-600 dark:text-orange-400" x-text="unassignedCourses.length">68</p>
                 </div>
@@ -217,10 +222,10 @@
         <!-- Main Layout: Two columns -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Left Panel: Lecture Pool - Fix CLS: Add min-height -->
-            <div class="md:col-span-1" id="available-courses-section">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200 md:sticky md:top-4 md:self-start min-h-[500px]">
+            <aside class="md:col-span-1" id="available-courses-section" aria-labelledby="available-courses-heading">
+                <div class="liquid-glass rounded-lg shadow-md p-6 transition-colors duration-200 md:sticky md:top-4 md:self-start min-h-[500px]">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100" x-text="t('available_courses')"></h2>
+                        <h2 id="available-courses-heading" class="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100" x-text="t('available_courses')"></h2>
                         <button @click="openAddModal()" 
                                 class="bg-blue-500 hover:bg-blue-600 text-white text-xs sm:text-sm px-3 py-2 rounded min-h-[44px]" 
                                 x-text="t('add')"
@@ -255,7 +260,10 @@
                                     <p><span class="font-medium" x-text="t('recommendation')"></span>: <span x-text="t('semester') + ' ' + course.recommendedSemester"></span></p>
                                 </div>
                                 <div class="space-y-2">
-                                    <select @change="assignCourse(course, $event.target.value); $event.target.value=''"
+                                    <label :for="'assign-course-' + course.id" class="sr-only" x-text="'Assign ' + course.name + ' to semester'"></label>
+                                    <select :id="'assign-course-' + course.id"
+                                            @change="assignCourse(course, $event.target.value); $event.target.value=''"
+                                            :aria-label="'Assign ' + course.name + ' to semester'"
                                             class="w-full text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500">
                                         <option value="" x-text="t('take_in_semester')"></option>
                                         <template x-for="semester in semesterList" :key="semester.id">
@@ -263,9 +271,13 @@
                                         </template>
                                     </select>
                                     <div class="flex flex-col xxs:flex-row gap-2">
-                                        <button @click="openEditModal(course)" class="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded flex-1 min-h-[36px]" x-text="t('edit')">
+                                        <button @click="openEditModal(course)"
+                                                :aria-label="'Edit ' + course.name"
+                                                class="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded flex-1 min-h-[36px]" x-text="t('edit')">
                                         </button>
-                                        <button @click="deleteCourse(course)" class="text-xs bg-red-100 dark:bg-red-900/50 hover:bg-red-200 dark:hover:bg-red-900/70 text-red-700 dark:text-red-300 px-2 py-1 rounded flex-1 min-h-[36px]" x-text="t('delete')">
+                                        <button @click="deleteCourse(course)"
+                                                :aria-label="'Delete ' + course.name"
+                                                class="text-xs bg-red-100 dark:bg-red-900/50 hover:bg-red-200 dark:hover:bg-red-900/70 text-red-700 dark:text-red-300 px-2 py-1 rounded flex-1 min-h-[36px]" x-text="t('delete')">
                                         </button>
                                     </div>
                                 </div>
@@ -279,13 +291,13 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </aside>
 
             <!-- Right Panel: Semester Grid - Fix CLS: Add min-height -->
-            <div class="md:col-span-2">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200 min-h-[600px]">
+            <section class="md:col-span-2" aria-labelledby="semester-plan-heading">
+                <div class="liquid-glass rounded-lg shadow-md p-6 transition-colors duration-200 min-h-[600px]">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100" x-text="t('semester_plan')"></h2>
+                        <h2 id="semester-plan-heading" class="text-xl font-semibold text-gray-800 dark:text-gray-100" x-text="t('semester_plan')"></h2>
                         <button @click="showValidationSummary = !showValidationSummary"
                                 class="text-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded"
                                 :aria-label="showValidationSummary ? 'Hide summary' : 'Show summary'"
@@ -352,15 +364,18 @@
                                 <div class="min-h-[100px] rounded p-2 space-y-2 transition-colors duration-200"
                                      :class="semester.type === 'antara' ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-800'">
                                     <template x-for="course in getSemesterCourses(semester.id)" :key="course.id">
-                                        <div class="bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded p-2 text-xs transition-colors duration-200">
+                                        <div class="liquid-glass-card rounded p-2 text-xs">
                                             <div class="flex justify-between items-start">
                                                 <div class="flex-1">
                                                     <p class="font-semibold text-gray-800 dark:text-gray-100" x-text="course.code"></p>
                                                     <p class="text-gray-600 dark:text-gray-300" x-text="course.name"></p>
                                                     <p class="text-gray-500 dark:text-gray-400 mt-1" x-text="course.credits + ' ' + t('sks')"></p>
                                                 </div>
-                                                <button @click="unassignCourse(course)" class="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 ml-2">
-                                                    ✕
+                                                <button @click="unassignCourse(course)"
+                                                        :aria-label="'Remove ' + course.name + ' from this semester'"
+                                                        class="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 ml-2 min-h-[36px] min-w-[36px]">
+                                                    <span aria-hidden="true">✕</span>
+                                                    <span class="sr-only">Remove</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -375,40 +390,54 @@
                         </template>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
+        </main>
+
+        <!-- ARIA Live Regions for Screen Reader Announcements (WCAG 2.1 AA) -->
+        <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcements"></div>
+        <div aria-live="assertive" aria-atomic="true" class="sr-only" id="error-announcements"></div>
 
         <!-- Add/Edit Course Modal -->
         <div x-show="showAddModal"
              x-cloak
              class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
              @click.self="closeModal()"
+             @keydown.escape="closeModal()"
              role="dialog"
              aria-modal="true"
              aria-labelledby="modal-add-course-title">
-            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-lg mx-auto transition-colors duration-200 max-h-[90vh] overflow-y-auto">
+            <div class="liquid-glass-modal rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-lg mx-auto transition-colors duration-200 max-h-[90vh] overflow-y-auto">
                 <h2 id="modal-add-course-title" class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100" x-text="editingCourse ? t('edit_course_title') : t('add_edit_course_title')"></h2>
 
                 <form @submit.prevent="saveCourse()" class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('course_code')"></label>
+                        <label for="course-code-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('course_code')">Course Code</label>
                         <input type="text"
+                               id="course-code-input"
                                x-model="newCourse.code"
                                required
+                               aria-required="true"
+                               :aria-invalid="!newCourse.code && 'true'"
                                class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('course_name')"></label>
+                        <label for="course-name-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('course_name')">Course Name</label>
                         <input type="text"
+                               id="course-name-input"
                                x-model="newCourse.name"
                                required
+                               aria-required="true"
+                               :aria-invalid="!newCourse.name && 'true'"
                                class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('type')"></label>
-                        <select x-model="newCourse.type"
+                        <label for="course-type-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('type')">Type</label>
+                        <select id="course-type-select"
+                                x-model="newCourse.type"
+                                aria-label="Course type"
                                 class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="Wajib">Wajib</option>
                             <option value="Pilihan">Pilihan</option>
@@ -416,26 +445,35 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('credits_sks')"></label>
+                        <label for="course-credits-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('credits_sks')">Credits (SKS)</label>
                         <input type="number"
+                               id="course-credits-input"
                                x-model.number="newCourse.credits"
                                required
+                               aria-required="true"
                                min="1"
                                max="8"
+                               :aria-invalid="(newCourse.credits < 1 || newCourse.credits > 8) && 'true'"
+                               aria-describedby="credits-help"
                                class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <span id="credits-help" class="sr-only">Enter credits between 1 and 8</span>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('lecturer')"></label>
+                        <label for="course-lecturer-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('lecturer')">Lecturer</label>
                         <input type="text"
+                               id="course-lecturer-input"
                                x-model="newCourse.lecturer"
                                required
+                               aria-required="true"
                                class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('recommended_semester')"></label>
-                        <select x-model.number="newCourse.recommendedSemester"
+                        <label for="course-semester-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('recommended_semester')">Recommended Semester</label>
+                        <select id="course-semester-select"
+                                x-model.number="newCourse.recommendedSemester"
+                                aria-label="Recommended semester"
                                 class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <template x-for="semester in semesterList.filter(s => s.type === 'normal')" :key="semester.id">
                                 <option :value="semester.id" x-text="semester.name"></option>
@@ -461,10 +499,11 @@
              x-cloak
              class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
              @click.self="showImportExportModal = false"
+             @keydown.escape="showImportExportModal = false"
              role="dialog"
              aria-modal="true"
              aria-labelledby="modal-import-export-title">
-            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-lg mx-auto transition-colors duration-200 max-h-[90vh] overflow-y-auto">
+            <div class="liquid-glass-modal rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-lg mx-auto transition-colors duration-200 max-h-[90vh] overflow-y-auto">
                 <h2 id="modal-import-export-title" class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100" x-text="t('import_export_data')"></h2>
 
                 <div class="space-y-4">
@@ -516,10 +555,11 @@
              x-cloak
              class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto p-4"
              @click.self="showSettingsModal = false"
+             @keydown.escape="showSettingsModal = false"
              role="dialog"
              aria-modal="true"
              aria-labelledby="modal-settings-title">
-            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-lg lg:max-w-2xl mx-auto my-8 transition-colors duration-200">
+            <div class="liquid-glass-modal rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-lg lg:max-w-2xl mx-auto my-8 transition-colors duration-200">
                 <h2 id="modal-settings-title" class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100" x-text="t('credit_limit_settings')"></h2>
 
                 <div class="space-y-4 max-h-[60vh] overflow-y-auto">
@@ -549,11 +589,13 @@
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                             <template x-for="semester in semesterList.filter(s => s.type === 'normal')" :key="semester.id">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="semester.name"></label>
+                                    <label :for="'semester-credits-' + semester.id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="semester.name"></label>
                                     <input type="number"
+                                           :id="'semester-credits-' + semester.id"
                                            x-model.number="settings.semesterMaxCredits[semester.id]"
                                            min="1"
                                            max="30"
+                                           :aria-label="'Maximum credits for ' + semester.name"
                                            class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                                 </div>
                             </template>
@@ -566,11 +608,13 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                             <template x-for="semester in semesterList.filter(s => s.type === 'antara')" :key="semester.id">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="semester.name"></label>
+                                    <label :for="'antara-credits-' + semester.id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="semester.name"></label>
                                     <input type="number"
+                                           :id="'antara-credits-' + semester.id"
                                            x-model.number="settings.semesterMaxCredits[semester.id]"
                                            min="1"
                                            max="15"
+                                           :aria-label="'Maximum credits for ' + semester.name"
                                            class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                                 </div>
                             </template>
@@ -581,12 +625,16 @@
                     <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
                         <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3" x-text="t('target_sks')"></h3>
                         <div class="max-w-xs">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('total_target_sks')"></label>
+                            <label for="target-credits-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" x-text="t('total_target_sks')">Total Target SKS</label>
                             <input type="number"
+                                   id="target-credits-input"
                                    x-model.number="settings.targetCredits"
                                    min="100"
                                    max="200"
+                                   aria-label="Total target credits"
+                                   aria-describedby="target-credits-help"
                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <span id="target-credits-help" class="sr-only">Enter target credits between 100 and 200</span>
                         </div>
                     </div>
                 </div>

@@ -22,6 +22,14 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+  /* Liquid Glass Effect - Gradient Background */
+  background: linear-gradient(135deg, #f0f4ff 0%, #e6f0ff 100%) !important;
+  background-attachment: fixed;
+}
+
+.dark body {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+  background-attachment: fixed;
 }
 
 .container {
@@ -133,17 +141,152 @@ body {
   content-visibility: auto;
 }
 
-/* Accessibility: Focus states */
+/* Liquid Glass Effect - 75% Opacity */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.dark .liquid-glass {
+  background: rgba(31, 41, 55, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Liquid Glass for Statistics Cards */
+.liquid-glass-stat {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(240, 240, 255, 0.75)) !important;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.1);
+}
+
+.dark .liquid-glass-stat {
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.75), rgba(55, 65, 81, 0.75)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Liquid Glass for Course Cards */
+.liquid-glass-card {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 24px 0 rgba(31, 38, 135, 0.12);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.liquid-glass-card:hover {
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  transform: translateY(-2px);
+}
+
+.dark .liquid-glass-card {
+  background: rgba(31, 41, 55, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.25);
+}
+
+.dark .liquid-glass-card:hover {
+  background: rgba(31, 41, 55, 0.85) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* Liquid Glass for Modals */
+.liquid-glass-modal {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.2);
+}
+
+.dark .liquid-glass-modal {
+  background: rgba(31, 41, 55, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Accessibility: Enhanced Focus states with better contrast (WCAG 2.1 AA) */
+/* Primary focus indicator for interactive elements */
 button:focus-visible,
 select:focus-visible,
-input:focus-visible {
-  outline: 2px solid #3b82f6;
+input:focus-visible,
+a:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.1);
+}
+
+/* Dark mode focus indicators */
+.dark button:focus-visible,
+.dark select:focus-visible,
+.dark input:focus-visible,
+.dark a:focus-visible,
+.dark textarea:focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(96, 165, 250, 0.2);
+}
+
+/* Fallback for all focusable elements */
+*:focus-visible {
+  outline: 3px solid #2563eb;
   outline-offset: 2px;
 }
 
-*:focus-visible {
-  outline: 2px solid #3b82f6;
+.dark *:focus-visible {
+  outline: 3px solid #60a5fa;
   outline-offset: 2px;
+}
+
+/* Screen reader only utility class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip link - visible only when focused */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #2563eb;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  z-index: 100;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid #1e40af;
+  outline-offset: 2px;
+}
+
+.dark .skip-link {
+  background: #60a5fa;
+  color: #1e293b;
+}
+
+.dark .skip-link:focus {
+  outline: 3px solid #93c5fd;
 }
 
 /* Reduced motion support */

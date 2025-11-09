@@ -58,11 +58,37 @@ A modern, responsive web application for planning university course schedules wi
 - **Smooth Transitions**: Animated theme changes
 - **Full Coverage**: All components support both themes
 
+### ✨ Liquid Glass Theme
+- **Modern Glassmorphism**: Premium frosted glass aesthetic with 75% opacity
+- **Gradient Backgrounds**: Beautiful color gradients for both light and dark modes
+- **Backdrop Blur**: Advanced blur and saturation effects for depth
+- **Smooth Animations**: Elegant hover effects and transitions
+- **Four Glass Variants**:
+  - Statistics cards with gradient overlays
+  - Main panels with frosted glass effect
+  - Course cards with hover lift animations
+  - Modal dialogs with enhanced blur
+- **Full Dark Mode Support**: Automatic adaptation to light/dark themes
+- **Cross-browser Compatible**: Works on all modern browsers with webkit fallbacks
+
 ### 🌍 Multi-language Support
 - **Three Languages**: English, Indonesian (Bahasa Indonesia), and Japanese (日本語)
 - **Easy Switching**: Language selector in the header
 - **Complete Translation**: All UI elements fully translated
 - **Persistent**: Language preference saved across sessions
+
+### ♿ Accessibility (WCAG 2.1 AA)
+- **Keyboard Navigation**: Full keyboard support with visible focus indicators
+- **Skip Links**: "Skip to main content" for quick navigation
+- **Screen Reader Support**: ARIA landmarks, live regions, and proper semantics
+- **Modal Focus Trapping**: Focus contained within modals, returns to trigger on close
+- **Form Accessibility**: Explicit label associations and validation announcements
+- **High Contrast**: 3px focus outlines with 4.5:1+ color contrast ratios
+- **Touch Targets**: Minimum 44×44px for all interactive elements
+- **Loading Announcements**: Screen reader notifications for async operations
+- **Multi-language a11y**: Accessibility features work in all 3 languages
+
+📖 **Full Documentation**: See [ACCESSIBILITY.md](./ACCESSIBILITY.md) and [ACCESSIBILITY_TESTING.md](./ACCESSIBILITY_TESTING.md)
 
 ## Technology Stack
 
@@ -600,7 +626,15 @@ For issues or questions:
 
 ## Changelog
 
-### Version 2.1.0 (Current - October 2025)
+### Version 2.2.0 (Current - November 2025)
+- **✨ Liquid Glass Theme**: Premium glassmorphism design with 75% opacity frosted glass effect
+- **🎨 Gradient Backgrounds**: Subtle light blue gradients in light mode, dark blue in dark mode
+- **💎 Advanced Effects**: Backdrop blur and saturation for depth and modern aesthetics
+- **🎭 Four Glass Variants**: Specialized styles for statistics, panels, cards, and modals
+- **🌊 Smooth Animations**: Elegant hover effects with lift and glow transitions
+- **🎨 Cross-browser Support**: Full compatibility with webkit and standard backdrop filters
+
+### Version 2.1.0 (October 2025)
 - **🧪 Comprehensive Testing**: 132 Playwright tests (44 tests × 3 device profiles)
 - **🤖 CI/CD Pipeline**: Automated GitHub Actions workflows with parallel jobs
 - **⚡ Performance Optimization**: 60-70% faster test execution with parallel testing
