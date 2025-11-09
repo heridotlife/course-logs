@@ -47,12 +47,39 @@ export function courseApp() {
             // Use WeakMap to store handlers per modal element to prevent memory leaks
             handlers: new WeakMap(),
 
+            // Helper: Check if element is truly visible and enabled
+            isElementFocusable(element) {
+                if (!element) return false;
+
+                // Check if element or any parent is hidden
+                if (element.offsetParent === null) return false;
+
+                // Check for hidden/disabled attributes
+                if (element.hasAttribute('hidden') || element.hasAttribute('disabled')) return false;
+
+                // Check visibility styles
+                const style = window.getComputedStyle(element);
+                if (style.display === 'none' || style.visibility === 'hidden') return false;
+
+                return true;
+            },
+
+            // Get all visible and enabled focusable elements
+            getFocusableElements(modalElement) {
+                const all = Array.from(modalElement.querySelectorAll(this.focusableSelectors));
+                return all.filter(el => this.isElementFocusable(el));
+            },
+
             activate(modalElement) {
                 this.lastFocusedElement = document.activeElement;
-                const focusableElements = modalElement.querySelectorAll(this.focusableSelectors);
-                if (focusableElements.length > 0) {
-                    focusableElements[0].focus();
-                }
+
+                // Use requestAnimationFrame to ensure DOM has updated before focusing
+                requestAnimationFrame(() => {
+                    const focusableElements = this.getFocusableElements(modalElement);
+                    if (focusableElements.length > 0) {
+                        focusableElements[0].focus();
+                    }
+                });
 
                 // Remove any existing handler for this modal before adding new one
                 const existingHandler = this.handlers.get(modalElement);
@@ -81,7 +108,9 @@ export function courseApp() {
 
             handleKeyDown(e, modalElement) {
                 if (e.key === 'Tab') {
-                    const focusableElements = Array.from(modalElement.querySelectorAll(this.focusableSelectors));
+                    const focusableElements = this.getFocusableElements(modalElement);
+                    if (focusableElements.length === 0) return;
+
                     const firstElement = focusableElements[0];
                     const lastElement = focusableElements[focusableElements.length - 1];
 

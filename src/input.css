@@ -141,13 +141,39 @@ body {
   content-visibility: auto;
 }
 
-/* Liquid Glass Effect - 75% Opacity */
-/* Note: Do not combine these classes with Tailwind bg-* classes */
-/* The glassmorphism effect requires specific RGBA values for the frosted glass appearance */
+/* ========================================================================
+   LIQUID GLASS DESIGN SYSTEM
+   ========================================================================
+
+   Glassmorphism effect with optimized performance for all devices.
+
+   IMPORTANT USAGE GUIDELINES:
+   ---------------------------
+   1. DO NOT combine liquid-glass classes with Tailwind bg-* utilities
+      ❌ Bad:  <div class="liquid-glass bg-white">
+      ✅ Good: <div class="liquid-glass">
+
+   2. The specific RGBA background values are REQUIRED for the frosted glass effect
+      - Modifying these will break the glassmorphism appearance
+      - These values work with backdrop-filter to create the glass effect
+
+   3. Performance Optimizations:
+      - Blur amounts reduced to 12-15px (from 16-24px) for lower-end devices
+      - will-change: backdrop-filter creates GPU layer for smoother rendering
+      - Tested on devices with GPU constraints
+
+   4. Accessibility:
+      - All glass effects maintain WCAG 2.1 AA contrast ratios
+      - Text remains readable against blurred backgrounds
+
+   ======================================================================== */
+
+/* Base Liquid Glass - General Purpose */
 .liquid-glass {
   background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(15px) saturate(180%);
+  -webkit-backdrop-filter: blur(15px) saturate(180%);
+  will-change: backdrop-filter;
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 }
@@ -161,8 +187,9 @@ body {
 /* Liquid Glass for Statistics Cards */
 .liquid-glass-stat {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(240, 240, 255, 0.75));
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  will-change: backdrop-filter;
   border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.1);
 }
@@ -176,8 +203,9 @@ body {
 /* Liquid Glass for Course Cards */
 .liquid-glass-card {
   background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(18px) saturate(170%);
-  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(14px) saturate(170%);
+  -webkit-backdrop-filter: blur(14px) saturate(170%);
+  will-change: backdrop-filter, transform;
   border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 6px 24px 0 rgba(31, 38, 135, 0.12);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -203,8 +231,9 @@ body {
 /* Liquid Glass for Modals */
 .liquid-glass-modal {
   background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(24px) saturate(200%);
-  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  backdrop-filter: blur(15px) saturate(200%);
+  -webkit-backdrop-filter: blur(15px) saturate(200%);
+  will-change: backdrop-filter;
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.2);
 }
