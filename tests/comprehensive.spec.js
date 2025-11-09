@@ -363,36 +363,30 @@ test.describe('Course-Logs - Comprehensive Test Suite', () => {
     test('should apply correct colors in dark mode', async ({ page }) => {
       const testId = await getResponsiveButtonTestId(page, 'theme');
       const darkModeBtn = page.getByTestId(testId);
-      
+
       // Toggle to dark mode
       await darkModeBtn.click();
-      
+
       // Wait for transition
       await page.waitForTimeout(250);
-      
-      // Check body background color
-      const backgroundColor = await page.locator('body').evaluate(el => 
-        window.getComputedStyle(el).backgroundColor
+
+      // Check for dark class on html element
+      const htmlHasDarkClass = await page.locator('html').evaluate(el =>
+        el.classList.contains('dark')
       );
-      
-      // Tailwind v4 uses oklch() color format
-      // Dark mode should have dark background (oklch lightness < 0.3 or rgb values < 100)
-      if (backgroundColor.includes('oklch')) {
-        // Parse oklch(L C H) - L is lightness (0-1)
-        const lightnessMatch = backgroundColor.match(/oklch\(([\d.]+)/);
-        const lightness = lightnessMatch ? parseFloat(lightnessMatch[1]) : 1;
-        expect(lightness).toBeLessThan(0.3); // Dark background
-      } else if (backgroundColor.includes('rgb')) {
-        // Parse rgb(r, g, b) - check if values are dark (< 100)
-        const rgbMatch = backgroundColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-        const r = rgbMatch ? parseInt(rgbMatch[1]) : 255;
-        const g = rgbMatch ? parseInt(rgbMatch[2]) : 255;
-        const b = rgbMatch ? parseInt(rgbMatch[3]) : 255;
-        expect(Math.max(r, g, b)).toBeLessThan(100); // Dark color
-      } else {
-        // Fallback: just verify it's not white/light
-        expect(backgroundColor).not.toContain('255');
-      }
+      expect(htmlHasDarkClass).toBe(true);
+
+      // Check body has gradient background (liquid glass theme)
+      const backgroundImage = await page.locator('body').evaluate(el =>
+        window.getComputedStyle(el).backgroundImage
+      );
+
+      // Should have linear-gradient for liquid glass effect
+      expect(backgroundImage).toContain('linear-gradient');
+
+      // Verify liquid glass components are present
+      const liquidGlassElements = await page.locator('.liquid-glass').count();
+      expect(liquidGlassElements).toBeGreaterThan(0);
     });
 
     test('should have no CLS during dark mode toggle', async ({ page }) => {
@@ -1025,11 +1019,12 @@ test.describe('Course-Logs - Comprehensive Test Suite', () => {
   // Run locally with: pnpm exec playwright test --update-snapshots
   // Then commit the generated snapshots to pass in CI
 
+  // Visual Regression Tests
+  // Note: Snapshots are platform-specific (darwin for macOS, linux for CI)
   test.describe('Visual Regression', () => {
-    // Skip visual regression tests in CI if snapshots don't exist
-    test.skip(!!process.env.CI, 'Skipping visual regression in CI until snapshots are committed');
-    
+
     test('should match desktop layout snapshot', async ({ page }) => {
+
       await page.setViewportSize({ width: 1920, height: 1080 });
       await page.waitForLoadState('networkidle');
       
@@ -1042,7 +1037,7 @@ test.describe('Course-Logs - Comprehensive Test Suite', () => {
     test('should match mobile layout snapshot', async ({ page }) => {
       await page.setViewportSize({ width: 393, height: 851 });
       await page.waitForLoadState('networkidle');
-      
+
       await expect(page).toHaveScreenshot('mobile-layout.png', {
         maxDiffPixels: 100,
       });
@@ -1050,12 +1045,12 @@ test.describe('Course-Logs - Comprehensive Test Suite', () => {
 
     test('should match dark mode snapshot', async ({ page }) => {
       await page.setViewportSize({ width: 1920, height: 1080 });
-      
+
       const testId = await getResponsiveButtonTestId(page, 'theme');
       const darkModeBtn = page.getByTestId(testId);
       await darkModeBtn.click();
       await page.waitForTimeout(500);
-      
+
       await expect(page).toHaveScreenshot('dark-mode-layout.png', {
         maxDiffPixels: 100,
       });

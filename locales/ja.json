@@ -1,6 +1,7 @@
 {
   "title": "シベルム学習計画",
   "subtitle": "シベルムでの学業の旅を計画しましょう",
+  "skip_to_main_content": "メインコンテンツへスキップ",
   "last_saved": "最終保存日時:",
   "dark_mode": "ダーク",
   "light_mode": "ライト",
@@ -84,5 +85,16 @@
   "proceed": "続行しますか？",
   "import_confirm": "${newLectures.length}件の講義をインポートしますか？これにより、現在のすべての講義が置き換えられます。",
   "import_successful": "インポートに成功しました！",
-  "import_error": "CSVファイルのインポート中にエラーが発生しました。形式を確認してください。"
+  "import_error": "CSVファイルのインポート中にエラーが発生しました。形式を確認してください。",
+  "loading_courses": "コースを読み込んでいます...",
+  "courses_loaded": "コースが正常に読み込まれました",
+  "auto_mapping_courses": "コースを自動的にマッピングしています...",
+  "course_saved": "コースが正常に保存されました",
+  "course_deleted": "コースが正常に削除されました",
+  "data_saved": "データが正常に保存されました",
+  "error_credits_range": "エラー：単位数は1から8の間でなければなりません",
+  "error_required_fields": "エラー：すべての必須フィールドを入力してください",
+  "error_import_failed": "エラー：ファイルのインポートに失敗しました",
+  "loading": "読み込み中...",
+  "operation_complete": "操作完了"
 }

@@ -18,4 +18,4 @@ playwright-report/*
 *.key
 
 # Claude Code MCP local overrides (keep mcp.json, ignore personal configs)
-.claude/mcp.local.json
+.agent/.claude/mcp.local.json

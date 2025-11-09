@@ -1,6 +1,7 @@
 {
   "title": "Rencana Studi Sibermu",
   "subtitle": "Rencanakan perjalanan akademis Anda di Sibermu",
+  "skip_to_main_content": "Lewati ke konten utama",
   "last_saved": "Terakhir disimpan:",
   "dark_mode": "Gelap",
   "light_mode": "Terang",
@@ -84,5 +85,16 @@
   "proceed": "Apakah Anda ingin melanjutkan?",
   "import_confirm": "Impor ${newLectures.length} mata kuliah? Ini akan menggantikan semua mata kuliah saat ini.",
   "import_successful": "Impor berhasil!",
-  "import_error": "Kesalahan mengimpor file CSV. Silakan periksa formatnya."
+  "import_error": "Kesalahan mengimpor file CSV. Silakan periksa formatnya.",
+  "loading_courses": "Memuat mata kuliah...",
+  "courses_loaded": "Mata kuliah berhasil dimuat",
+  "auto_mapping_courses": "Memetakan mata kuliah secara otomatis...",
+  "course_saved": "Mata kuliah berhasil disimpan",
+  "course_deleted": "Mata kuliah berhasil dihapus",
+  "data_saved": "Data berhasil disimpan",
+  "error_credits_range": "Error: SKS harus antara 1 dan 8",
+  "error_required_fields": "Error: Harap isi semua field yang wajib",
+  "error_import_failed": "Error: Gagal mengimpor file",
+  "loading": "Memuat...",
+  "operation_complete": "Operasi selesai"
 }

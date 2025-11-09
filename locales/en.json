@@ -2,6 +2,7 @@
 {
   "title": "Sibermu Study Plan",
   "subtitle": "Plan your academic journey through at Sibermu",
+  "skip_to_main_content": "Skip to main content",
   "last_saved": "Last saved:",
   "dark_mode": "Dark",
   "light_mode": "Light",
@@ -85,5 +86,16 @@
   "proceed": "Do you want to proceed?",
   "import_confirm": "Import ${newLectures.length} lectures? This will replace all current lectures.",
   "import_successful": "Import successful!",
-  "import_error": "Error importing CSV file. Please check the format."
+  "import_error": "Error importing CSV file. Please check the format.",
+  "loading_courses": "Loading courses...",
+  "courses_loaded": "Courses loaded successfully",
+  "auto_mapping_courses": "Automatically mapping courses...",
+  "course_saved": "Course saved successfully",
+  "course_deleted": "Course deleted successfully",
+  "data_saved": "Data saved successfully",
+  "error_credits_range": "Error: Credits must be between 1 and 8",
+  "error_required_fields": "Error: Please fill in all required fields",
+  "error_import_failed": "Error: Failed to import file",
+  "loading": "Loading...",
+  "operation_complete": "Operation completed"
 }
