@@ -44,6 +44,8 @@ export function courseApp() {
         focusTrap: {
             lastFocusedElement: null,
             focusableSelectors: 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+            // Use WeakMap to store handlers per modal element to prevent memory leaks
+            handlers: new WeakMap(),
 
             activate(modalElement) {
                 this.lastFocusedElement = document.activeElement;
@@ -52,15 +54,25 @@ export function courseApp() {
                     focusableElements[0].focus();
                 }
 
-                // Remove any existing listener before adding new one
-                modalElement.removeEventListener('keydown', this._handleKeyDownBound);
-                this._handleKeyDownBound = (e) => this.handleKeyDown(e, modalElement);
-                modalElement.addEventListener('keydown', this._handleKeyDownBound);
+                // Remove any existing handler for this modal before adding new one
+                const existingHandler = this.handlers.get(modalElement);
+                if (existingHandler) {
+                    modalElement.removeEventListener('keydown', existingHandler);
+                }
+
+                // Create and store new handler for this specific modal
+                const handler = (e) => this.handleKeyDown(e, modalElement);
+                this.handlers.set(modalElement, handler);
+                modalElement.addEventListener('keydown', handler);
             },
 
             deactivate(modalElement) {
-                if (modalElement && this._handleKeyDownBound) {
-                    modalElement.removeEventListener('keydown', this._handleKeyDownBound);
+                if (modalElement) {
+                    const handler = this.handlers.get(modalElement);
+                    if (handler) {
+                        modalElement.removeEventListener('keydown', handler);
+                        this.handlers.delete(modalElement);
+                    }
                 }
                 if (this.lastFocusedElement) {
                     this.lastFocusedElement.focus();

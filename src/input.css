@@ -142,8 +142,10 @@ body {
 }
 
 /* Liquid Glass Effect - 75% Opacity */
+/* Note: Do not combine these classes with Tailwind bg-* classes */
+/* The glassmorphism effect requires specific RGBA values for the frosted glass appearance */
 .liquid-glass {
-  background: rgba(255, 255, 255, 0.75) !important;
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -151,14 +153,14 @@ body {
 }
 
 .dark .liquid-glass {
-  background: rgba(31, 41, 55, 0.75) !important;
+  background: rgba(31, 41, 55, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
 /* Liquid Glass for Statistics Cards */
 .liquid-glass-stat {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(240, 240, 255, 0.75)) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(240, 240, 255, 0.75));
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.4);
@@ -166,14 +168,14 @@ body {
 }
 
 .dark .liquid-glass-stat {
-  background: linear-gradient(135deg, rgba(31, 41, 55, 0.75), rgba(55, 65, 81, 0.75)) !important;
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.75), rgba(55, 65, 81, 0.75));
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* Liquid Glass for Course Cards */
 .liquid-glass-card {
-  background: rgba(255, 255, 255, 0.75) !important;
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(18px) saturate(170%);
   -webkit-backdrop-filter: blur(18px) saturate(170%);
   border: 1px solid rgba(255, 255, 255, 0.35);
@@ -182,25 +184,25 @@ body {
 }
 
 .liquid-glass-card:hover {
-  background: rgba(255, 255, 255, 0.85) !important;
+  background: rgba(255, 255, 255, 0.85);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
   transform: translateY(-2px);
 }
 
 .dark .liquid-glass-card {
-  background: rgba(31, 41, 55, 0.75) !important;
+  background: rgba(31, 41, 55, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.25);
 }
 
 .dark .liquid-glass-card:hover {
-  background: rgba(31, 41, 55, 0.85) !important;
+  background: rgba(31, 41, 55, 0.85);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
 }
 
 /* Liquid Glass for Modals */
 .liquid-glass-modal {
-  background: rgba(255, 255, 255, 0.75) !important;
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
   border: 1px solid rgba(255, 255, 255, 0.5);
@@ -208,7 +210,7 @@ body {
 }
 
 .dark .liquid-glass-modal {
-  background: rgba(31, 41, 55, 0.75) !important;
+  background: rgba(31, 41, 55, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.4);
 }
