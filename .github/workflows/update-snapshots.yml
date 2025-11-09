@@ -1,0 +1,62 @@
+name: Update Visual Regression Snapshots
+
+on:
+  workflow_dispatch: # Manual trigger only
+    inputs:
+      branch:
+        description: 'Branch to update snapshots on'
+        required: true
+        default: 'main'
+
+jobs:
+  update-linux-snapshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Build project
+        run: pnpm run build
+
+      - name: Generate Linux snapshots
+        run: pnpm exec playwright test tests/comprehensive.spec.js --grep "Visual Regression" --update-snapshots --reporter=list
+
+      - name: Check for snapshot changes
+        id: check_changes
+        run: |
+          if git diff --quiet tests/comprehensive.spec.js-snapshots/; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push snapshots
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add tests/comprehensive.spec.js-snapshots/*-linux.png
+          git commit -m "chore: update Linux visual regression snapshots [skip ci]"
+          git push
+
+      - name: No changes detected
+        if: steps.check_changes.outputs.has_changes == 'false'
+        run: echo "No snapshot changes detected. Linux snapshots are up to date."

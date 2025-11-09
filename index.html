@@ -167,10 +167,12 @@
                                 data-testid="mobile-save-btn">>
                         </button>
                         <button @click="showSettingsModal = true; mobileMenuOpen = false"
-                                class="bg-purple-500 hover:bg-purple-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('settings')">
+                                class="bg-purple-500 hover:bg-purple-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('settings')"
+                                aria-label="Open settings">
                         </button>
                         <button @click="showImportExportModal = true; mobileMenuOpen = false"
-                                class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('import_export')">
+                                class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded min-h-[44px]" x-text="t('import_export')"
+                                aria-label="Import or export data">
                         </button>
                         <button @click="clearLocalStorage(); mobileMenuOpen = false"
                                 class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded col-span-2 min-h-[44px]" x-text="t('reset_all')">

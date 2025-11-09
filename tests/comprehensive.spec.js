@@ -1019,8 +1019,9 @@ test.describe('Course-Logs - Comprehensive Test Suite', () => {
   // Run locally with: pnpm exec playwright test --update-snapshots
   // Then commit the generated snapshots to pass in CI
 
-  // Conditionally skip Visual Regression tests in CI (snapshots not committed yet)
-  (process.env.CI ? test.describe.skip : test.describe)('Visual Regression', () => {
+  // Visual Regression Tests
+  // Note: Snapshots are platform-specific (darwin for macOS, linux for CI)
+  test.describe('Visual Regression', () => {
 
     test('should match desktop layout snapshot', async ({ page }) => {
 

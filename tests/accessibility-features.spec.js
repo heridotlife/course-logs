@@ -5,6 +5,67 @@
 
 import { test, expect } from '@playwright/test';
 
+/**
+ * Helper function to handle responsive button clicks
+ * Opens mobile menu if on mobile viewport, then clicks the button
+ */
+async function clickResponsiveButton(page, buttonText) {
+  const viewport = page.viewportSize();
+  const isMobile = viewport && viewport.width < 1024; // lg breakpoint
+
+  if (isMobile) {
+    // Open mobile menu first
+    const mobileMenuBtn = page.getByTestId('mobile-menu-btn');
+    if (await mobileMenuBtn.isVisible()) {
+      await mobileMenuBtn.click();
+      await page.waitForTimeout(300); // Wait for menu animation
+    }
+  }
+
+  // Click the button (now visible)
+  await page.click(`button:has-text("${buttonText}")`);
+}
+
+/**
+ * Helper function to change language on both desktop and mobile
+ */
+async function changeLanguageResponsive(page, languageName) {
+  const viewport = page.viewportSize();
+  const isMobile = viewport && viewport.width < 1024;
+
+  if (isMobile) {
+    // Open mobile menu first
+    const mobileMenuBtn = page.getByTestId('mobile-menu-btn');
+    if (await mobileMenuBtn.isVisible()) {
+      await mobileMenuBtn.click();
+      await page.waitForTimeout(600); // Wait for collapse animation to complete
+    }
+    // Wait for language button to be visible, then click
+    const langBtn = page.getByTestId('mobile-lang-btn');
+    await langBtn.waitFor({ state: 'visible', timeout: 5000 });
+    await langBtn.click();
+    await page.waitForTimeout(500); // Wait for dropdown animation
+  } else {
+    // Click desktop language button
+    const langBtn = page.getByTestId('desktop-lang-btn');
+    await langBtn.click();
+    await page.waitForTimeout(500);
+  }
+
+  // Wait for dropdown menu to appear - filter by specific class to avoid strict mode violation
+  // Desktop menu uses .w-40, mobile menu uses .w-full
+  const languageMenu = isMobile
+    ? page.locator('[role="menu"][aria-label="Language options"].w-full')
+    : page.locator('[role="menu"][aria-label="Language options"].w-40');
+  await languageMenu.waitFor({ state: 'visible', timeout: 5000 });
+
+  // Find and click the language link within the visible menu
+  const languageLink = languageMenu.locator(`a:has-text("${languageName}")`);
+  await languageLink.waitFor({ state: 'visible', timeout: 5000 });
+  await languageLink.click();
+  await page.waitForTimeout(500);
+}
+
 test.describe('Advanced Accessibility Features', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:8080');
@@ -96,8 +157,22 @@ test.describe('Advanced Accessibility Features', () => {
     });
 
     test('should trap focus in Import/Export modal', async ({ page }) => {
-      // Open Import/Export modal
-      await page.click('button:has-text("Import/Export")');
+      const viewport = page.viewportSize();
+      const isMobile = viewport && viewport.width < 1024;
+
+      if (isMobile) {
+        // Open mobile menu first
+        const mobileMenuBtn = page.getByTestId('mobile-menu-btn');
+        await mobileMenuBtn.click();
+        await page.waitForTimeout(600);
+
+        // Click Import/Export button within mobile menu
+        const mobileMenu = page.locator('.lg\\:hidden.border-t');
+        await mobileMenu.locator('button[aria-label="Import or export data"]').click();
+      } else {
+        // Click desktop Import/Export button
+        await page.locator('button[aria-label="Import or export data"]').first().click();
+      }
       await page.waitForTimeout(500);
 
       const modal = page.locator('[role="dialog"][aria-labelledby="modal-import-export-title"]');
@@ -116,8 +191,22 @@ test.describe('Advanced Accessibility Features', () => {
     });
 
     test('should trap focus in Settings modal', async ({ page }) => {
-      // Open Settings modal
-      await page.click('button:has-text("⚙️ Settings")');
+      const viewport = page.viewportSize();
+      const isMobile = viewport && viewport.width < 1024;
+
+      if (isMobile) {
+        // Open mobile menu first
+        const mobileMenuBtn = page.getByTestId('mobile-menu-btn');
+        await mobileMenuBtn.click();
+        await page.waitForTimeout(600);
+
+        // Click Settings button within mobile menu
+        const mobileMenu = page.locator('.lg\\:hidden.border-t');
+        await mobileMenu.locator('button[aria-label="Open settings"]').click();
+      } else {
+        // Click desktop Settings button
+        await page.locator('button[aria-label="Open settings"]').first().click();
+      }
       await page.waitForTimeout(500);
 
       const modal = page.locator('[role="dialog"][aria-labelledby="modal-settings-title"]');
@@ -311,17 +400,10 @@ test.describe('Advanced Accessibility Features', () => {
 
   test.describe('Multi-language Support for Announcements', () => {
     test('should announce in Indonesian when language is changed', async ({ page }) => {
-      // Change language to Indonesian
-      await page.click('button:has-text("EN")');
-      await page.waitForTimeout(300);
-      await page.click('a:has-text("Bahasa Indonesia")');
-      await page.waitForTimeout(1000);
+      // Change language to Indonesian (handles mobile/desktop automatically)
+      await changeLanguageResponsive(page, 'Bahasa Indonesia');
 
-      // Trigger an action that causes announcement
-      // The announcements should now be in Indonesian
-      // We can't directly test the screen reader output, but we can verify
-      // that the translation system is working
-
+      // Verify the translation system is working
       const statusRegion = page.locator('#status-announcements');
       await expect(statusRegion).toBeAttached();
 
@@ -329,11 +411,8 @@ test.describe('Advanced Accessibility Features', () => {
     });
 
     test('should announce in Japanese when language is changed', async ({ page }) => {
-      // Change language to Japanese
-      await page.click('button:has-text("EN")');
-      await page.waitForTimeout(300);
-      await page.click('a:has-text("日本語")');
-      await page.waitForTimeout(1000);
+      // Change language to Japanese (handles mobile/desktop automatically)
+      await changeLanguageResponsive(page, '日本語');
 
       const statusRegion = page.locator('#status-announcements');
       await expect(statusRegion).toBeAttached();
@@ -365,8 +444,21 @@ test.describe('Advanced Accessibility Features', () => {
 
   test.describe('Save Progress Announcements', () => {
     test('should announce when data is saved', async ({ page }) => {
-      // Find and click save button using test ID
-      const saveButton = page.getByTestId('save-btn');
+      const viewport = page.viewportSize();
+      const isMobile = viewport && viewport.width < 1024;
+
+      // Use appropriate test ID based on viewport
+      const saveButton = isMobile ? page.getByTestId('mobile-save-btn') : page.getByTestId('save-btn');
+
+      // Open mobile menu if needed
+      if (isMobile) {
+        const mobileMenuBtn = page.getByTestId('mobile-menu-btn');
+        if (await mobileMenuBtn.isVisible()) {
+          await mobileMenuBtn.click();
+          await page.waitForTimeout(300);
+        }
+      }
+
       await saveButton.click();
       await page.waitForTimeout(300);
 
