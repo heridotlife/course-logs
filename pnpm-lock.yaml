@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@alpinejs/collapse':
-        specifier: 3.15.1
-        version: 3.15.1
+        specifier: 3.15.2
+        version: 3.15.2
       alpinejs:
-        specifier: 3.15.1
-        version: 3.15.1
+        specifier: 3.15.2
+        version: 3.15.2
       http-server:
         specifier: 14.1.1
         version: 14.1.1
@@ -39,8 +39,8 @@ importers:
 
 packages:
 
-  '@alpinejs/collapse@3.15.1':
-    resolution: {integrity: sha512-p3ejDFk8VWdrHa6+Fq3NQp6X4LxWoj2TFRgKEKPQPmVyJMV+Zf5m4ZUFk3Z54zIsgOM9JkAZE0Xany00ntTTng==}
+  '@alpinejs/collapse@3.15.2':
+    resolution: {integrity: sha512-wQZ5vwz3dUuisssIcYgJGxkLl2EnkUmsHQxDvqGEEC3+3m662bbZXGlT3NFiTj7AqrbqHRgtwOdKi2umVFGimQ==}
 
   '@cloudflare/kv-asset-handler@0.4.0':
     resolution: {integrity: sha512-+tv3z+SPp+gqTIcImN9o0hqE9xyfQjI1XD9pL6NuKjua9B1y7mNYv0S9cP+QEbA4ppVgGZEmKOvHX5G5Ei1CVA==}
@@ -729,8 +729,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  alpinejs@3.15.1:
-    resolution: {integrity: sha512-HLO1TtiE92VajFHtLLPK8BWaK1YepV/uj31UrfoGnQ00lyFOJZ+oVY3F0DghPAwvg8sLU79pmjGQSytERa2gEg==}
+  alpinejs@3.15.2:
+    resolution: {integrity: sha512-2kYF2aG+DTFkE6p0rHG5XmN4VEb6sO9b02aOdU4+i8QN6rL0DbRZQiypDE1gBcGO65yDcqMz5KKYUYgMUxgNkw==}
 
   ansi-styles@3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
@@ -1657,7 +1657,7 @@ packages:
 
 snapshots:
 
-  '@alpinejs/collapse@3.15.1': {}
+  '@alpinejs/collapse@3.15.2': {}
 
   '@cloudflare/kv-asset-handler@0.4.0':
     dependencies:
@@ -2106,7 +2106,7 @@ snapshots:
 
   acorn@8.14.0: {}
 
-  alpinejs@3.15.1:
+  alpinejs@3.15.2:
     dependencies:
       '@vue/reactivity': 3.1.5
 
