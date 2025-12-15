@@ -83,7 +83,7 @@ jobs:
 
       - name: Upload generated snapshots
         if: steps.playwright_test.outcome == 'failure'
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: snapshots-${{ matrix.project }}
           path: tests/comprehensive.spec.js-snapshots/*-linux.png
@@ -91,7 +91,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-results-${{ matrix.project }}
           path: test-results/
@@ -99,7 +99,7 @@ jobs:
 
       - name: Upload HTML report
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-report-${{ matrix.project }}
           path: playwright-report/
@@ -254,7 +254,7 @@ jobs:
 
       - name: Upload accessibility report
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: accessibility-report
           path: playwright-report/
