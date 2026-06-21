@@ -119,6 +119,12 @@ test.describe('Advanced Accessibility Features', () => {
       const modal = page.locator('[role="dialog"][aria-labelledby="modal-add-course-title"]');
       await expect(modal).toBeVisible();
 
+      // Move focus inside the dialog before pressing Escape. The escape handler
+      // is bound to the modal element (@keydown.escape), so the keydown must
+      // originate from within the modal to bubble to it. Without this the test
+      // flakes because focus can remain on the trigger button (outside the modal).
+      await page.locator('#course-code-input').focus();
+
       // Close modal with Escape
       await page.keyboard.press('Escape');
 
