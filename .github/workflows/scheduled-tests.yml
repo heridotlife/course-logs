@@ -112,7 +112,7 @@ jobs:
 
     steps:
       - name: Create issue on test failure
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           SERVER_URL: ${{ github.server_url }}
           REPOSITORY: ${{ github.repository }}
