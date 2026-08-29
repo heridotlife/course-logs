@@ -545,3 +545,107 @@ textarea:focus-visible {
     color: #6c757d;
   }
 }
+
+/* ============================================================
+   Rirekisho (履歴書) print sheet — JIS-style layout
+   Screen: hidden. Print: only visible element on the page.
+   ============================================================ */
+
+/* Screen visibility handled by x-show + x-cloak (same as modals).
+   Sheet is block-displayed only when showRirekishoSheet is true. */
+.rirekisho-sheet { padding: 1rem; }
+.rirekisho-sheet.visible-on-screen { display: block; }
+
+@media print {
+  /* When rirekisho is active, hide the whole app container —
+     sheet lives outside .container so it survives this rule. */
+  html.rirekisho-active .container {
+    display: none !important;
+  }
+
+  html.rirekisho-active footer {
+    display: none !important;
+  }
+
+  html.rirekisho-active .rirekisho-sheet {
+    display: block !important;
+  }
+
+  /* Non-rirekisho prints (regular PDF export) keep old behavior:
+     sheet stays hidden. */
+  html:not(.rirekisho-active) .rirekisho-sheet {
+    display: none !important;
+  }
+
+  .rirekisho-inner {
+    width: 186mm;
+    margin: 0 auto;
+    color: #000;
+    background: #fff;
+    font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "MS PGothic", sans-serif;
+    font-size: 10pt;
+    line-height: 1.7;
+  }
+
+  .rirekisho-title {
+    text-align: center;
+    font-size: 16pt;
+    font-weight: 700;
+    letter-spacing: 0.5em;
+    margin: 0 0 4mm;
+    padding-bottom: 2mm;
+    border-bottom: 1.5pt solid #000;
+  }
+
+  /* Shared cell skins */
+  .rirekisho-personal,
+  .rirekisho-history,
+  .rirekisho-licenses {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 5mm;
+  }
+
+  .rirekisho-personal th,
+  .rirekisho-history th,
+  .rirekisho-licenses th,
+  .rirekisho-personal td,
+  .rirekisho-history td,
+  .rirekisho-licenses td {
+    border: 0.75pt solid #000;
+    padding: 1.5mm 2mm;
+    text-align: left;
+    vertical-align: top;
+    overflow: hidden;
+    word-wrap: break-word;
+  }
+
+  /* Personal block: label column narrow, fill cells empty */
+  .rirekisho-personal th { width: 22mm; font-weight: 600; background: #f3f4f6; }
+
+  .rk-fill { height: 7mm; }
+
+  .rk-photo {
+    height: 36mm;
+    background: repeating-linear-gradient(45deg, transparent, transparent 8px, #f9fafb 8px, #f9fafb 16px);
+  }
+
+  .rk-hidden-th { border: none !important; background: transparent !important; }
+
+  /* History table: 年 + 月 columns then description */
+  .rirekisho-history .rk-ym,
+  .rirekisho-licenses .rk-ym {
+    width: 24mm;
+    text-align: center;
+    font-weight: 600;
+    background: #f3f4f6;
+  }
+
+  .rk-year,
+  .rk-month { width: 12mm; text-align: center; }
+
+  .rk-desc { height: 7mm; }
+
+  .rk-credits { color: #444; font-size: 8.5pt; }
+}

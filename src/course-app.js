@@ -22,6 +22,7 @@ export function courseApp() {
         showValidationSummary: false,
         showImportExportModal: false,
         showSettingsModal: false,
+        showRirekishoSheet: false,
         lastSaved: null,
         editingCourse: null,
         newCourse: {
@@ -550,6 +551,66 @@ export function courseApp() {
             setTimeout(() => {
                 window.print();
             }, 100);
+        },
+
+        /**
+         * Rirekisho (履歴書) export.
+         * Education section auto-built from semester timeline; all other
+         * sections (personal, 職歴, 免許・資格) render as blank rows for
+         * hand-filling, matching standard blank JIS sheets.
+         */
+        exportToRirekisho() {
+            this.showImportExportModal = false;
+            this.showRirekishoSheet = true;
+
+            // Flag <html> so print CSS hides the app and shows only the sheet
+            document.documentElement.classList.add('rirekisho-active');
+
+            // Existing print CSS is A4 landscape; rirekisho is portrait JIS.
+            // Inject page override only while the sheet is visible.
+            this._rirekishoPrintStyle = document.createElement('style');
+            this._rirekishoPrintStyle.id = 'rirekisho-print-style';
+            this._rirekishoPrintStyle.textContent = '@media print { @page { size: A4 portrait; margin: 12mm; } }';
+            document.head.appendChild(this._rirekishoPrintStyle);
+
+            const cleanup = () => {
+                this.showRirekishoSheet = false;
+                document.documentElement.classList.remove('rirekisho-active');
+                if (this._rirekishoPrintStyle) {
+                    this._rirekishoPrintStyle.remove();
+                    this._rirekishoPrintStyle = null;
+                }
+                window.removeEventListener('afterprint', cleanup);
+            };
+            window.addEventListener('afterprint', cleanup);
+
+            // Small delay to ensure Alpine has rendered the sheet
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        },
+
+        /**
+         * Build 学歴・職歴 rows for the rirekisho sheet.
+         * One row per semester with credits summary; "以上" terminator row.
+         */
+        getRirekishoRows() {
+            const rows = [];
+            for ( const sem of this.semesterList ) {
+                const credits = this.getSemesterCredits(sem.id);
+                const label = sem.type === 'antara'
+                    ? this.t('rirekisho_antara_semester').replace('${n}', String(sem.id.split('-')[1]))
+                    : this.t('rirekisho_semester').replace('${n}', String(sem.id));
+                rows.push({
+                    year: '',
+                    month: '',
+                    label,
+                    credits,
+                    isEducation: true
+                });
+            }
+            rows.push({ year: '', month: '', label: '以上', credits: null, isEducation: true });
+            return rows;
         },
 
         importCSV(event) {

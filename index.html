@@ -396,6 +396,85 @@
         </div>
         </main>
 
+        <!-- Rirekisho (履歴書) print sheet — screen-hidden, print-only -->
+        <div x-show="showRirekishoSheet"
+             x-cloak
+             id="rirekisho-sheet"
+             class="rirekisho-sheet"
+             role="region"
+             aria-label="Rirekisho print preview">
+            <div class="rirekisho-inner">
+                <h2 class="rirekisho-title" x-text="t('rirekisho_title')"></h2>
+
+                <!-- Personal block: blank hand-fill fields -->
+                <table class="rirekisho-personal" aria-label="Personal information">
+                    <tbody>
+                        <tr>
+                            <th scope="row" x-text="t('rirekisho_name')"></th>
+                            <td class="rk-fill"></td>
+                            <th scope="row" x-text="t('rirekisho_dob')"></th>
+                            <td class="rk-fill rk-dob"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" x-text="t('rirekisho_address')"></th>
+                            <td class="rk-fill" colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" x-text="t('rirekisho_phone')"></th>
+                            <td class="rk-fill"></td>
+                            <th scope="row" x-text="t('rirekisho_email')"></th>
+                            <td class="rk-fill"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" x-text="t('rirekisho_photo')"></th>
+                            <td class="rk-photo" colspan="3" rowspan="4"></td>
+                        </tr>
+                        <tr><th scope="row" class="rk-hidden-th"></th></tr>
+                        <tr><th scope="row" class="rk-hidden-th"></th></tr>
+                        <tr><th scope="row" class="rk-hidden-th"></th></tr>
+                    </tbody>
+                </table>
+
+                <!-- 学歴・職歴: education auto-filled from plan timeline -->
+                <table class="rirekisho-history" aria-label="Education and work history">
+                    <thead>
+                        <tr>
+                            <th class="rk-ym" colspan="2" x-text="t('rirekisho_year_month')"></th>
+                            <th x-text="t('rirekisho_history')"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="(row, index) in getRirekishoRows()" :key="index">
+                            <tr>
+                                <td class="rk-year" x-text="row.year"></td>
+                                <td class="rk-month" x-text="row.month"></td>
+                                <td class="rk-desc">
+                                    <span x-text="row.label"></span>
+                                    <span class="rk-credits" x-show="row.credits !== null"
+                                          x-text="row.credits !== null ? '(' + row.credits + ' ' + t('rirekisho_credits') + ')' : ''"></span>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+
+                <!-- 免許・資格: blank hand-fill rows -->
+                <table class="rirekisho-licenses" aria-label="Licenses and qualifications">
+                    <thead>
+                        <tr>
+                            <th class="rk-ym" colspan="2" x-text="t('rirekisho_year_month')"></th>
+                            <th x-text="t('rirekisho_licenses')"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="rk-year"></td><td class="rk-month"></td><td class="rk-fill"></td></tr>
+                        <tr><td class="rk-year"></td><td class="rk-month"></td><td class="rk-fill"></td></tr>
+                        <tr><td class="rk-year"></td><td class="rk-month"></td><td class="rk-fill"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- ARIA Live Regions for Screen Reader Announcements (WCAG 2.1 AA) -->
         <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcements"></div>
         <div aria-live="assertive" aria-atomic="true" class="sr-only" id="error-announcements"></div>
@@ -521,6 +600,10 @@
                             </button>
                             <button @click="exportToPDF(); showImportExportModal = false"
                                     class="col-span-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm" x-text="t('export_as_pdf')">
+                            </button>
+                            <button @click="exportToRirekisho()"
+                                    class="col-span-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded text-sm"
+                                    x-text="t('export_as_rirekisho')">
                             </button>
                         </div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-2" x-text="t('download_your_plan')">
