@@ -31,16 +31,16 @@
   "license": "MIT",
   "packageManager": "pnpm@11.9.0",
   "dependencies": {
-    "@alpinejs/collapse": "3.16.3",
-    "alpinejs": "3.16.3",
+    "@alpinejs/collapse": "3.17.2",
+    "alpinejs": "3.17.2",
     "http-server": "14.1.1"
   },
   "devDependencies": {
-    "@playwright/test": "1.62.1",
+    "@playwright/test": "1.63.0",
     "@tailwindcss/cli": "4.3.3",
     "esbuild": "0.28.2",
     "npm-run-all": "4.1.5",
     "tailwindcss": "4.3.3",
-    "wrangler": "4.127.0"
+    "wrangler": "4.131.0"
   }
 }
