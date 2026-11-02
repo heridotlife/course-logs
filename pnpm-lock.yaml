@@ -19,11 +19,11 @@ importers:
   .:
     dependencies:
       '@alpinejs/collapse':
-        specifier: 3.17.2
-        version: 3.17.2
+        specifier: 3.17.5
+        version: 3.17.5
       alpinejs:
-        specifier: 3.17.2
-        version: 3.17.2
+        specifier: 3.17.5
+        version: 3.17.5
       http-server:
         specifier: 14.1.1
         version: 14.1.1
@@ -49,8 +49,8 @@ importers:
 
 packages:
 
-  '@alpinejs/collapse@3.17.2':
-    resolution: {integrity: sha512-OugjrAUGXkg8Msmitgf3rXFyoSYXchN00LPQYC2zDjaTcuRaVXXseBZcCU7DZ7b6cyZzCvYbIYngbaaEzvEfuw==}
+  '@alpinejs/collapse@3.17.5':
+    resolution: {integrity: sha512-6UJsyEef1a5gh18VhTomP/kHYFxg82ExKSyaezU0iMwTWZSNaApZIvdr7FbMMb5qs+TECctkRgJD37Y3QOyo+A==}
 
   '@cloudflare/kv-asset-handler@0.5.0':
     resolution: {integrity: sha512-jxQYkj8dSIzc0cD6cMMNdOc1UVjqSqu8BZdor5s8cGjW2I8BjODt/kWPVdY+u9zj3ms75Q5qaZgnxUad83+eAg==}
@@ -800,14 +800,14 @@ packages:
     resolution: {integrity: sha512-krXjAikiaFSPaK/FkAQT5UTx3VormQaiZ5hBFlJZ9UFQGB/rwg1MZIhHAG9smMQRTdyJxP6Qt5MwMtdyU5FWrA==}
     engines: {node: '>= 20'}
 
-  '@vue/reactivity@3.5.42':
-    resolution: {integrity: sha512-TzNNfKpb7hDxbQltwAut8VDQA5YP+BuRlxntHUuRjyKwlMvmAPbs3unhCvieijifY6vFfVBwsS7wG/C7uq+bEQ==}
+  '@vue/reactivity@3.5.44':
+    resolution: {integrity: sha512-u+QJdKeBBEADkPdevsL+6E12QlYVfBD8Zcw5qjDQKtamI6l14KyqazJMobhCKelhWN5zpyKUiEDoTyHE93cqWw==}
 
-  '@vue/shared@3.5.42':
-    resolution: {integrity: sha512-2rPxex1jQf4jvl9MOHl6YaXCPcrNqz/FstMOEh3QWY+/OME9nQTvl9WYeCwhW7AFjaR0SnngZGlp/wkR6rkI6g==}
+  '@vue/shared@3.5.44':
+    resolution: {integrity: sha512-H82XLH0DjmSOdbEwO15x3QTo1f5PWEtv237eLpYKc0mqLu+B8hnq16lFWmuBmNurkeiG3wr+oM1FhOll/YVFRg==}
 
-  alpinejs@3.17.2:
-    resolution: {integrity: sha512-xbnG3LlnmFkiNO49C+qhqjEDqOdB0snKqvT48ZVp8TakpZOpsoQbc/jAxpptQRjZi7c9rLeCfvwQ/XOSirIZFQ==}
+  alpinejs@3.17.5:
+    resolution: {integrity: sha512-XewMqRC6zjy8iaUPn86dxjvooAsNai3hUtQbdn0A5H2w7Jt10xHGZ1SczN5+Dvp3UKkuSEt9moy/UaUWOwKdnQ==}
 
   ansi-styles@3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
@@ -1706,7 +1706,7 @@ packages:
 
 snapshots:
 
-  '@alpinejs/collapse@3.17.2': {}
+  '@alpinejs/collapse@3.17.5': {}
 
   '@cloudflare/kv-asset-handler@0.5.0': {}
 
@@ -2179,15 +2179,15 @@ snapshots:
       '@tailwindcss/oxide-win32-arm64-msvc': 4.3.3
       '@tailwindcss/oxide-win32-x64-msvc': 4.3.3
 
-  '@vue/reactivity@3.5.42':
+  '@vue/reactivity@3.5.44':
     dependencies:
-      '@vue/shared': 3.5.42
+      '@vue/shared': 3.5.44
 
-  '@vue/shared@3.5.42': {}
+  '@vue/shared@3.5.44': {}
 
-  alpinejs@3.17.2:
+  alpinejs@3.17.5:
     dependencies:
-      '@vue/reactivity': 3.5.42
+      '@vue/reactivity': 3.5.44
 
   ansi-styles@3.2.1:
     dependencies:
